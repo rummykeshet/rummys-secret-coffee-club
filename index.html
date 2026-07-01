@@ -1,0 +1,416 @@
+<!DOCTYPE html><html><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rummy's Secret Coffee Club</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#1f4e79;--navy-deep:#163a5c;--gold:#b08d4f;--beige:#f4efe4;--cream:#fffdf8;--ink:#2a3a4a;--muted:#8a8270;--line:#e4dcc8;--sky:#eaf2fb;--sky-line:#c4d8ec}
+body{font-family:'IBM Plex Mono',monospace;background:var(--beige);color:var(--ink);min-height:100vh;padding:24px 18px 40px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:480px;margin:0 auto}
+.hero{text-align:center;padding:14px 0 26px}
+.hero-mark{width:38px;height:1px;background:var(--gold);margin:0 auto 16px}
+.hero-kicker{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.hero-name{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:38px;color:var(--navy);line-height:1.0}
+.banner{background:linear-gradient(135deg,var(--navy),var(--navy-deep));color:#eaf2fb;border-radius:14px;padding:13px 16px;font-size:11px;line-height:1.7;text-align:center;margin-bottom:20px;box-shadow:0 6px 18px rgba(31,78,121,.16)}
+.banner b{color:#fff}
+.card{background:var(--cream);border:1px solid var(--line);border-radius:18px;padding:26px;margin-bottom:16px;box-shadow:0 2px 10px rgba(31,78,121,.05)}
+h1{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;margin-bottom:14px;line-height:1.05;color:var(--navy)}
+.about{font-size:12.5px;color:#5a6b7a;line-height:1.8}
+.about p{margin-bottom:9px}.about p:last-child{margin-bottom:0}
+.section-head{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.section-head h2{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--navy)}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--gold)}
+.product{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.product:last-child{border-bottom:none}
+.product.soldout{opacity:.5}
+.p-name{font-size:14px}.p-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.sold-badge{display:inline-block;font-size:10px;padding:2px 8px;background:#fee;border:1px solid #fcc;border-radius:10px;color:#c0392b;margin-top:4px}
+.stepper{display:flex;align-items:center;gap:12px}
+.step-btn{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:var(--beige);color:var(--navy);font-size:18px;cursor:pointer;line-height:1;transition:all .15s}
+.step-btn:hover:not(:disabled){border-color:var(--navy);background:var(--sky)}
+.step-btn:disabled{opacity:.3;cursor:not-allowed}
+.step-val{min-width:20px;text-align:center;font-size:16px;font-weight:500}
+label{display:block;font-size:11px;color:#6a7888;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em;margin-top:16px}
+label:first-child{margin-top:0}
+input,select,textarea{width:100%;background:#fbf8f1;border:1px solid var(--line);border-radius:9px;padding:12px;color:var(--ink);font-family:inherit;font-size:14px;outline:none;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--navy)}
+textarea{resize:vertical;min-height:80px}
+.req{color:#c0392b;font-weight:500}
+.fulfil-opts{display:flex;gap:10px}
+.fulfil{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:14px 10px;border:1px solid var(--line);border-radius:13px;cursor:pointer;transition:all .18s}
+.fulfil:hover{border-color:var(--sky-line)}
+.fulfil.active{border-color:var(--navy);background:var(--sky);box-shadow:0 2px 10px rgba(31,78,121,.08)}
+.fulfil-icon{width:40px;height:40px;border-radius:11px;background:var(--beige);display:flex;align-items:center;justify-content:center;margin-bottom:8px;transition:all .18s}
+.fulfil.active .fulfil-icon{background:var(--navy)}
+.fulfil-icon svg{width:20px;height:20px;stroke:var(--navy);fill:none;stroke-width:1.6;transition:stroke .18s}
+.fulfil.active .fulfil-icon svg{stroke:#fff}
+.sub-block{margin-top:14px;padding:16px;background:#fbf8f1;border:1px solid var(--line);border-radius:12px}
+.total-card{background:var(--sky);border:1px solid var(--sky-line)}
+.total-row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;color:#4a5b6a}
+.total-row.grand{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--navy);border-top:1px solid var(--sky-line);margin-top:10px;padding-top:14px}
+.pay{font-size:12px;color:#5a6b7a;line-height:1.8;background:var(--cream);border:1px solid var(--line);border-radius:11px;padding:15px;margin-top:16px}
+.pay b{color:var(--navy)}
+.btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--navy),var(--navy-deep));border:none;border-radius:12px;color:#fff;font-family:inherit;font-size:15px;font-weight:500;cursor:pointer;margin-top:18px;box-shadow:0 6px 16px rgba(31,78,121,.2);transition:all .15s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(31,78,121,.28)}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+.ship-price{font-size:12.5px;color:var(--navy);margin-top:12px;font-weight:500}
+.err{font-size:11px;color:#b5793a;margin-top:8px}
+.hint{font-size:10.5px;color:#a39a82;margin-top:8px;line-height:1.6}
+.ty-paybox{background:var(--sky);border:1px solid var(--sky-line);border-radius:14px;padding:22px;margin-bottom:18px}
+.ty-payid{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;color:var(--navy)}
+.ty-quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;color:var(--navy);line-height:1.55}
+.loading{text-align:center;padding:40px;color:var(--muted);font-size:13px}
+.news-box{display:flex;align-items:flex-start;gap:10px;margin-top:16px;padding:14px;background:#eaf5ef;border:1px solid #b0d8c0;border-radius:11px}
+.news-box input{width:18px;height:18px;flex-shrink:0;margin-top:1px;accent-color:#2d7a4f}
+.news-box label{margin-top:0;text-transform:none;font-size:13px;color:#2a3a4a;letter-spacing:0;cursor:pointer;line-height:1.55}
+</style></head><body>
+
+<div class="wrap" id="order-form" style="display:none">
+  <div class="hero">
+    <div class="hero-kicker">Micro &amp; Nano Lots</div>
+    <div class="hero-name">Rummy's Secret<br>Coffee Club</div>
+    <div class="hero-mark"></div>
+  </div>
+  <div class="banner">
+    <b>Roasting every Monday</b> &nbsp;&middot;&nbsp; Orders close Sunday 11:59pm<br>
+    <b>Shipping locally &amp; worldwide</b>
+  </div>
+  <div class="card">
+    <h1>Who am I?</h1>
+    <div class="about">
+      <p>After many years in coffee roasting and consulting, I've stepped back to roast at a smaller scale &mdash; reconnecting with community and the people I care about. This is about great coffee for even greater people.</p>
+      <p>I'm sourcing some of the most exceptional coffees I can find &mdash; exclusive micro and nano lots I'm passionate about, from amazing people. I want to share that journey with you.</p>
+      <p>This is my passion project. A transitional brand. It won't last forever, so enjoy it while it's here.</p>
+      <p>If you're here, you're part of my community. Buckle up, have fun.</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="section-head"><span class="dot"></span><h2>Choose your coffee</h2></div>
+    <div id="products"><div class="loading">Loading available coffees...</div></div>
+  </div>
+  <div class="card">
+    <div class="section-head"><span class="dot"></span><h2>How would you like it?</h2></div>
+    <div class="fulfil-opts">
+      <div class="fulfil" data-method="shipping" onclick="setFulfil('shipping')">
+        <div class="fulfil-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg></div>
+        <div style="font-size:13px;font-weight:500">Shipping</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Locally &amp; worldwide</div>
+      </div>
+      <div class="fulfil" data-method="delivery" onclick="setFulfil('delivery')">
+        <div class="fulfil-icon"><svg viewBox="0 0 24 24"><path d="M1 3h13v13H1z"/><path d="M14 8h4l3 3v5h-7"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="17.5" cy="18.5" r="2"/></svg></div>
+        <div style="font-size:13px;font-weight:500">Local Delivery</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">3km from Mount Lawley 6050</div>
+      </div>
+      <div class="fulfil active" data-method="pickup" onclick="setFulfil('pickup')">
+        <div class="fulfil-icon"><svg viewBox="0 0 24 24"><path d="M6 2 3 6v13a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
+        <div style="font-size:13px;font-weight:500">Pickup</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Mount Lawley 6050</div>
+      </div>
+    </div>
+    <div class="sub-block" id="sub-pickup">
+      <div class="hint" style="margin-top:0;font-size:12px;color:#5a6b7a">Local pickup from Mount Lawley 6050. Coffee is roasted every Monday and will be ready to pick up from Rummy's from Tuesday. He will contact you Monday evening with instructions on how to pick up.</div>
+    </div>
+    <div class="sub-block" id="sub-delivery" style="display:none">
+      <div class="hint" style="margin-top:0;margin-bottom:14px;font-size:12px;color:#5a6b7a;background:#eaf2fb;border:1px solid #c4d8ec;border-radius:9px;padding:11px 13px;">
+        Local delivery within <b>3km of Mount Lawley 6050</b>. If your suburb isn't listed, please use <b>Shipping</b> instead.
+      </div>
+      <label>Suburb <span class="req">*</span></label>
+      <select id="d-suburb" onchange="recalc()">
+        <option value="">Select your suburb...</option>
+        <option>Bedford</option>
+        <option>Coolbinia</option>
+        <option>East Perth</option>
+        <option>Highgate</option>
+        <option>Inglewood</option>
+        <option>Leederville</option>
+        <option>Maylands</option>
+        <option>Menora</option>
+        <option>Mount Lawley</option>
+        <option>North Perth</option>
+        <option>Northbridge</option>
+        <option>Perth</option>
+        <option>West Perth</option>
+      </select>
+      <label>Street address <span class="req">*</span></label>
+      <input type="text" id="d-street" placeholder="e.g. 12 Smith St" oninput="recalc()">
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-top:16px">
+        <input type="checkbox" id="d-safeplace" style="width:18px;height:18px;flex-shrink:0;margin-top:2px;accent-color:#1f4e79" onchange="recalc()">
+        <label for="d-safeplace" style="margin-top:0;text-transform:none;font-size:13px;color:#2a3a4a;letter-spacing:0;cursor:pointer">There is a safe place to leave my order (e.g. front porch, letterbox, reception)</label>
+      </div>
+      <label>Additional notes (optional)</label>
+      <textarea id="d-notes" placeholder="Safe place details, gate codes, delivery instructions..."></textarea>
+    </div>
+    <div class="sub-block" id="sub-shipping" style="display:none">
+      <label>Ship to <span class="req">*</span></label>
+      <select id="ship-dest" onchange="toggleShipDest()">
+        <option value="au">Within Australia</option>
+        <option value="intl">International</option>
+      </select>
+      <div id="ship-au">
+        <label>Street address <span class="req">*</span></label>
+        <input type="text" id="s-street" placeholder="e.g. 12 Smith St" oninput="recalc()">
+        <label>Suburb <span class="req">*</span></label>
+        <input type="text" id="s-suburb" placeholder="e.g. Fitzroy" oninput="recalc()">
+        <label>State <span class="req">*</span></label>
+        <select id="s-state" onchange="recalc()">
+          <option value="">Select...</option>
+          <option>ACT</option><option>NSW</option><option>NT</option><option>QLD</option>
+          <option>SA</option><option>TAS</option><option>VIC</option><option>WA</option>
+        </select>
+        <label>Postcode <span class="req">*</span></label>
+        <input type="text" id="postcode" inputmode="numeric" maxlength="4" placeholder="e.g. 3000" oninput="recalc()">
+      </div>
+      <div id="ship-intl" style="display:none">
+        <label>Country <span class="req">*</span></label>
+        <select id="country" onchange="recalc()"><option value="">Select...</option></select>
+        <label>Street address <span class="req">*</span></label>
+        <input type="text" id="i-street" placeholder="Street address" oninput="recalc()">
+        <label>City / Suburb <span class="req">*</span></label>
+        <input type="text" id="i-suburb" placeholder="City or suburb" oninput="recalc()">
+        <label>State / Province <span class="req">*</span></label>
+        <input type="text" id="i-state" placeholder="State or province" oninput="recalc()">
+        <label>Postal code <span class="req">*</span></label>
+        <input type="text" id="i-postcode" placeholder="Postal / ZIP code" oninput="recalc()">
+      </div>
+      <div class="ship-price" id="ship-price"></div>
+      <div class="err" id="ship-err"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="section-head"><span class="dot"></span><h2>Your details</h2></div>
+    <label>Full name <span class="req">*</span></label>
+    <input type="text" id="name" placeholder="Your name" oninput="recalc()">
+    <label>Email <span class="req">*</span></label>
+    <input type="email" id="email" placeholder="you@email.com" oninput="recalc()">
+    <label>Phone <span class="req">*</span></label>
+    <input type="tel" id="phone" placeholder="04xx xxx xxx" oninput="recalc()">
+    <label>Note (optional)</label>
+    <textarea id="note" placeholder="Anything you'd like Rummy to know..."></textarea>
+    <div class="news-box">
+      <input type="checkbox" id="newsletter" checked>
+      <label for="newsletter">Join Rummy's Secret Newsletter &mdash; be the first to know when new coffees drop</label>
+    </div>
+  </div>
+  <div class="card total-card">
+    <div class="total-row"><span>Coffee</span><span id="t-coffee">$0</span></div>
+    <div class="total-row"><span>Shipping</span><span id="t-ship">Free</span></div>
+    <div class="total-row grand"><span>Total</span><span id="t-grand">$0</span></div>
+    <div class="pay">Payment via <b>PayID</b>: 0497 866 615<br>
+    Please transfer once you've ordered. International customers &mdash; contact Rummy for bank transfer details.</div>
+    <button class="btn" id="submit" onclick="placeOrder()" disabled>Place order</button>
+    <div class="err" id="submit-err" style="text-align:center;margin-top:10px"></div>
+  </div>
+</div>
+
+<div class="wrap" id="loading-screen">
+  <div class="hero">
+    <div class="hero-kicker">Micro &amp; Nano Lots</div>
+    <div class="hero-name">Rummy's Secret<br>Coffee Club</div>
+    <div class="hero-mark"></div>
+  </div>
+  <div class="loading">Loading...</div>
+</div>
+
+<div class="wrap" id="thankyou" style="display:none">
+  <div class="hero">
+    <div class="hero-kicker">Micro &amp; Nano Lots</div>
+    <div class="hero-name">Rummy's Secret<br>Coffee Club</div>
+    <div class="hero-mark"></div>
+  </div>
+  <div class="card" style="text-align:center">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;color:var(--navy);margin-bottom:14px">Order received</div>
+    <p style="font-size:13px;color:#5a6b7a;line-height:1.8;margin-bottom:22px">Your coffee will be roasted on the next Monday. Orders close Sunday 11:59pm.</p>
+    <div class="ty-paybox">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#6a7888;margin-bottom:12px">To confirm your order, please pay</div>
+      <div style="font-size:12px;color:#5a6b7a;margin-bottom:5px">PayID</div>
+      <div class="ty-payid">0497 866 615</div>
+      <div id="ty-amount" style="font-size:14px;color:var(--navy);margin-top:12px;font-weight:500"></div>
+    </div>
+    <p style="font-size:12px;color:#8a8270;line-height:1.8;margin-bottom:22px">Doing an international transfer? Contact Rummy and we'll sort it out directly.</p>
+    <div style="border-top:1px solid var(--line);padding-top:20px">
+      <div class="hero-mark" style="margin-bottom:16px"></div>
+      <p class="ty-quote">Thank you, from the bottom of my cup, for joining our lovely little community. I hope you enjoy the coffees.</p>
+      <p style="font-size:12px;color:#8a8270;margin-top:14px">&mdash; Rummy</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const BASE_URL = 'https://script.google.com/macros/s/AKfycbxUrCGIMTUE7oCOYKQGdjeTXAUGdNblNKaPLdASrNsSP5QoDlX7uX4JF_k6HtFfWTguhQ/exec';
+
+const PRODUCTS = [
+  { id:'kaleidoscope',     name:'Kaleidoscope',     roast:'Filter',   size:'100g', sub:'Colombia \u00b7 Advanced Fermentation Natural \u00b7 Raspberry Lollies, Grape Bubblegum, Blue Curacao', variety:'Pink Bourbon, SL28, Typica + more', why:"This coffee tastes like unicorn tears, space lasers and a kids\u2019 birthday party and more! A carefully curated \u201cfruit salad\u201d of micro lots from the best producers in Colombia such as El Diviso, Las Flores, Los Nogales, Motta, and more. Recently my friends at Offshoot have been killing it on the competition stage, with Ami placing 3rd in the WA Barista competitions and Calvin Tang placing 1st in the world\u2019s first official Moccamaster competition. As soon as this coffee hits your grinder burrs, based on the smell alone you\u2019ll know you\u2019re in for a psychedelic trip of a coffee experience!!", price:23, weight:120 },
+  { id:'chelle-filter',    name:'Chelle',           roast:'Filter',   size:'100g', sub:'Ethiopia \u00b7 Washed \u00b7 Candied Lemon, Apricot, Floral', variety:'Ethiopian Landrace', why:"This is a classic Ethiopian washed coffee, a classic from my favourite region \u2014 Yirgacheffe. Notable for its high quality floral qualities, tea-like body, and fresh apricot fruitiness. This is the classic done right \u2014 for the lovers of clean, pristine coffees.", price:12, weight:120 },
+  { id:'guribea-espresso', name:'Guribea',          roast:'Espresso', size:'150g', sub:'Ethiopia \u00b7 Natural \u00b7 Blood Orange, Cherry, Marzipan', variety:'Ethiopian Landrace',    why:"A very sweet Ethiopian natural perfect for espresso lovers. Syrupy, sweet, with a hint of fruit and big body. Suits milk-based drinks beautifully too.", price:13, weight:175 },
+  { id:'anamelva-filter',  name:'Ana Melva',        roast:'Filter',   size:'100g', sub:'Peru \u00b7 Washed \u00b7 Mandarin, Red Apple, Panela',         variety:'Bourbon + Caturra',     why:"A classic Peruvian done right. Peru is the underdog to Colombia but slowly emerging as a solid quality origin. Ana Melva is a young producer who takes great care with her extended washed process, keeping the structure and cleanness of the cup, then precision drying in solar dryers. Very pronounced sweetness with bright, lively, elegant acidity.", price:12, weight:120 },
+  { id:'primerio-filter',  name:'Primerio \u2014 Winner #1', roast:'Filter', size:'100g', sub:'Timor-Leste \u00b7 Double Anaerobic \u00b7 Plum Jam, Cherry Pie, Dutch Cocoa', variety:'Typica + Timor Hybrid', why:"This coffee won first place in a regional competition in Timor-Leste. An incredibly rare find and unique micro lot that tastes nothing like any other Timor-Leste coffee you've had before. Enjoy its big ripe fruit notes with a lingering cacao-like finish.", price:16, weight:120 },
+];
+
+const DOM={Small:{max:500,p:[10.04,10.59,11.15]},Medium:{max:1000,p:[13.73,14.49,15.25]},Large:{max:3000,p:[17.37,18.34,19.30]},XL:{max:5000,p:[20.97,22.14,23.30]}};
+const INT_PRICES={"New Zealand":[15.49,18.67,25.08,31.49,37.91],"China":[18.95,24.70,36.24,47.79,59.33],"Rest of Asia":[18.95,24.70,36.24,47.79,59.33],"Pacific Islands":[18.95,24.70,36.24,47.79,59.33],"USA & Canada":[21.19,27.55,40.09,52.77,65.41],"UK & Ireland":[26.13,32.68,45.89,59.04,72.20],"Major Europe":[26.13,32.68,45.89,59.04,72.20],"Rest of World 1":[26.13,32.68,45.89,59.04,72.20],"Rest of World 2":[31.68,40.28,57.48,74.62,91.82]};
+const INT_BRACKETS=[250,500,1000,1500,2000];
+const COUNTRIES={"Afghanistan":"Rest of Asia","Argentina":"Rest of World 2","Austria":"Major Europe","Bangladesh":"Rest of Asia","Belgium":"Major Europe","Brazil":"Rest of World 2","Brunei":"Rest of Asia","Cambodia":"Rest of Asia","Canada":"USA & Canada","Chile":"Rest of World 2","China":"China","Colombia":"Rest of World 2","Cook Islands":"Pacific Islands","Croatia":"Rest of World 1","Czech Republic":"Rest of World 1","Denmark":"Major Europe","Egypt":"Rest of World 1","Fiji":"Pacific Islands","Finland":"Major Europe","France":"Major Europe","French Polynesia":"Pacific Islands","Germany":"Major Europe","Greece":"Major Europe","Hong Kong":"Rest of Asia","Hungary":"Rest of World 1","Iceland":"Rest of World 1","India":"Rest of Asia","Indonesia":"Rest of Asia","Ireland":"UK & Ireland","Israel":"Rest of World 1","Italy":"Major Europe","Japan":"Rest of Asia","Jordan":"Rest of World 1","Kenya":"Rest of World 2","Kuwait":"Rest of World 1","Laos":"Rest of Asia","Lebanon":"Rest of World 1","Luxembourg":"Major Europe","Macau":"Rest of Asia","Malaysia":"Rest of Asia","Maldives":"Rest of Asia","Malta":"Rest of World 1","Mexico":"Rest of World 2","Mongolia":"Rest of Asia","Myanmar":"Rest of Asia","Nepal":"Rest of Asia","Netherlands":"Major Europe","New Caledonia":"Pacific Islands","New Zealand":"New Zealand","Norway":"Major Europe","Pakistan":"Rest of Asia","Papua New Guinea":"Pacific Islands","Peru":"Rest of World 2","Philippines":"Rest of Asia","Poland":"Rest of World 1","Portugal":"Major Europe","Qatar":"Rest of World 1","Romania":"Rest of World 1","Russia":"Rest of World 1","Samoa":"Pacific Islands","Saudi Arabia":"Rest of World 1","Singapore":"Rest of Asia","Solomon Islands":"Pacific Islands","South Africa":"Rest of World 2","South Korea":"Rest of Asia","Spain":"Major Europe","Sri Lanka":"Rest of Asia","Sweden":"Major Europe","Switzerland":"Major Europe","Taiwan":"Rest of Asia","Thailand":"Rest of Asia","Tonga":"Pacific Islands","Turkey":"Rest of World 1","United Arab Emirates":"Rest of World 1","United Kingdom":"UK & Ireland","United States":"USA & Canada","Vanuatu":"Pacific Islands","Vietnam":"Rest of Asia"};
+const PERTH=[[6000,6038],[6050,6081],[6090,6090],[6100,6112],[6147,6176],[6180,6182],[6209,6210],[6800,6800],[6809,6809],[6827,6831],[6837,6850],[6865,6865],[6872,6872],[6892,6892],[6900,6939],[6941,6979],[6981,6997]];
+const RURAL=[[2265,2265],[2311,2312],[2321,2321],[2323,2323],[2326,2334],[2336,2347],[2350,2361],[2365,2365],[2369,2372],[2379,2382],[2386,2390],[2395,2431],[2439,2441],[2443,2449],[2453,2453],[2460,2484],[2489,2489],[2535,2551],[2575,2581],[2583,2594],[2621,2633],[2642,2647],[2649,2649],[2651,2678],[2700,2703],[2706,2707],[2710,2714],[2716,2716],[2720,2730],[2787,2799],[2803,2810],[2817,2849],[2852,2852],[2864,2879],[2648,2648],[2715,2715],[2717,2717],[2731,2739],[3231,3243],[3249,3254],[3260,3294],[3300,3330],[3332,3334],[3342,3345],[3351,3352],[3358,3364],[3370,3402],[3407,3424],[3444,3451],[3460,3462],[3464,3494],[3501,3502],[3506,3512],[3516,3522],[3525,3533],[3537,3549],[3552,3554],[3558,3599],[3607,3624],[3632,3649],[3658,3688],[3691,3749],[3812,3825],[3831,3835],[3840,3904],[3909,3909],[3921,3925],[3945,3946],[3950,3971],[3979,3979],[3984,3984],[3987,3996],[4309,4314],[4340,4342],[4352,4365],[4370,4374],[4377,4378],[4382,4390],[4401,4428],[4454,4455],[4461,4498],[4580,4581],[4600,4601],[4605,4615],[4620,4630],[4650,4650],[4659,4662],[4670,4680],[4694,4699],[4702,4702],[4704,4739],[4741,4746],[4753,4757],[4798,4830],[4849,4865],[4871,4877],[4880,4895],[2880,2880],[5202,5204],[5210,5214],[5220,5223],[5231,5244],[5250,5280],[5290,5311],[5320,5322],[5330,5333],[5340,5346],[5350,5350],[5353,5354],[5356,5357],[5360,5360],[5371,5374],[5381,5381],[5400,5401],[5410,5422],[5431,5434],[5440,5440],[5451,5455],[5460,5464],[5470,5473],[5480,5485],[5490,5495],[5501,5502],[5510,5510],[5520,5523],[5540,5540],[5550,5560],[5570,5583],[5600,5611],[5630,5633],[5640,5642],[5650,5655],[5660,5661],[5670,5671],[5680,5680],[5690,5690],[5700,5701],[5710,5725],[5730,5734],[6215,6244],[6251,6262],[6271,6284],[6286,6290],[6302,6375],[6383,6386],[6390,6452],[6460,6490],[6502,6537],[6556,6575],[6603,6616],[6620,6646],[6701,6733],[6740,6743],[6751,6765],[6770,6770],[803,803],[815,815],[822,822],[832,841],[845,850],[852,854],[860,860],[862,862],[870,870],[872,875],[880,881],[885,886],[2898,2899],[6798,6799],[7151,7151]];
+
+function inR(pc,r){return r.some(([a,b])=>pc>=a&&pc<=b)}
+function getZone(pc){if(inR(pc,PERTH))return 0;if(inR(pc,RURAL))return 2;return 1}
+
+const qty={};PRODUCTS.forEach(p=>qty[p.id]=0);
+let stock={};
+let fulfil='pickup';
+
+fetch(BASE_URL + '?action=getStock')
+  .then(r => r.json())
+  .then(s => {
+    stock = s;
+    renderProducts();
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('order-form').style.display = 'block';
+    recalc();
+  })
+  .catch(() => {
+    stock = {};
+    renderProducts();
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('order-form').style.display = 'block';
+    recalc();
+  });
+
+function renderProducts(){
+  const el=document.getElementById('products');
+  el.innerHTML='';
+  PRODUCTS.forEach(p=>{
+    const avail=stock[p.id]===undefined?999:stock[p.id];
+    const sold=avail<=0;
+    el.innerHTML+=\`
+      <div class="product\${sold?' soldout':''}">
+        <div style="flex:1;padding-right:12px">
+          <div class="p-name">\${p.name} &mdash; \${p.roast}</div>
+          <div class="p-sub">\${p.sub}</div>
+          <div class="p-sub" style="color:#b08d4f;margin-top:4px">Variety: \${p.variety}</div>
+          <div class="p-sub">\${p.size} &middot; $\${p.price}</div>
+          \${sold?'<div class="sold-badge">Sold Out</div>':''}
+          <details style="margin-top:8px">
+            <summary style="font-size:11px;color:#1f4e79;cursor:pointer;letter-spacing:.03em;list-style:none;display:flex;align-items:center;gap:5px">
+              <span style="font-size:10px">&#9654;</span> Why did Rummy choose this?
+            </summary>
+            <div style="font-size:11.5px;color:#5a6b7a;line-height:1.75;margin-top:8px;padding:10px 12px;background:#eaf2fb;border-radius:8px;border-left:2px solid #b08d4f">\${p.why}</div>
+          </details>
+        </div>
+        <div class="stepper" style="flex-shrink:0">
+          <button class="step-btn" onclick="bump('\${p.id}',-1)" \${sold?'disabled':''}>&#8722;</button>
+          <span class="step-val" id="q-\${p.id}">0</span>
+          <button class="step-btn" onclick="bump('\${p.id}',1)" \${sold?'disabled':''}>+</button>
+        </div>
+      </div>\`;
+  });
+}
+
+const csel=document.getElementById('country');
+Object.keys(COUNTRIES).sort().forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;csel.appendChild(o);});
+
+function bump(id,d){
+  const avail=stock[id]===undefined?999:stock[id];
+  qty[id]=Math.max(0,Math.min(avail,qty[id]+d));
+  document.getElementById('q-'+id).textContent=qty[id];
+  recalc();
+}
+function setFulfil(m){fulfil=m;document.querySelectorAll('.fulfil').forEach(el=>el.classList.toggle('active',el.dataset.method===m));['pickup','delivery','shipping'].forEach(x=>document.getElementById('sub-'+x).style.display=x===m?'block':'none');recalc();}
+function toggleShipDest(){const d=document.getElementById('ship-dest').value;document.getElementById('ship-au').style.display=d==='au'?'block':'none';document.getElementById('ship-intl').style.display=d==='intl'?'block':'none';recalc();}
+
+function coffeeWeight(){return PRODUCTS.reduce((s,p)=>s+qty[p.id]*p.weight,0)}
+function coffeeTotal(){return PRODUCTS.reduce((s,p)=>s+qty[p.id]*p.price,0)}
+function bagCount(){return PRODUCTS.reduce((s,p)=>s+qty[p.id],0)}
+function totalCoffeeGrams(){return PRODUCTS.reduce((s,p)=>s+qty[p.id]*parseInt(p.size),0)}
+
+function buildItems(){
+  return PRODUCTS.filter(p=>qty[p.id]>0)
+    .map(p=>qty[p.id]+'x '+p.name+' '+p.roast+' ('+p.size+')')
+    .join(', ');
+}
+function buildQtys(){
+  const q={};PRODUCTS.forEach(p=>{if(qty[p.id]>0)q[p.id]=qty[p.id];});return q;
+}
+function buildAddress(){
+  if(fulfil==='pickup')return 'Pickup';
+  if(fulfil==='delivery'){
+    const suburb=v('d-suburb');
+    const street=v('d-street');
+    const safePlace=document.getElementById('d-safeplace').checked?'Safe place: Yes':'Safe place: No';
+    const notes=v('d-notes');
+    return street+', '+suburb+' | '+safePlace+(notes?' | Notes: '+notes:'');
+  }
+  const dest=document.getElementById('ship-dest').value;
+  if(dest==='au')return v('s-street')+', '+v('s-suburb')+' '+v('s-state')+' '+v('postcode')+', Australia';
+  return v('i-street')+', '+v('i-suburb')+', '+v('i-state')+' '+v('i-postcode')+', '+v('country');
+}
+function v(id){return(document.getElementById(id)&&document.getElementById(id).value||'').trim()}
+
+function calcShipping(){
+  const err=document.getElementById('ship-err'),sp=document.getElementById('ship-price');
+  err.textContent='';sp.textContent='';
+  if(fulfil!=='shipping')return 0;
+  const w=coffeeWeight()+20;if(bagCount()===0)return 0;
+  const dest=document.getElementById('ship-dest').value;
+  if(dest==='au'){
+    const pcRaw=v('postcode');if(pcRaw.length!==4)return null;
+    const zone=getZone(parseInt(pcRaw));
+    let s=null;for(const[n,info]of Object.entries(DOM)){if(w<=info.max){s=[n,info];break;}}
+    if(!s){err.textContent='Over 5kg \u2014 contact for a quote.';return null;}
+    const price=s[1].p[zone];
+    sp.textContent=s[0]+' satchel \u00b7 '+['Perth metro','Capital/major','Rural'][zone]+' \u00b7 $'+price.toFixed(2);
+    return price;
+  } else {
+    const country=v('country');if(!country)return null;
+    if(w>2000){err.textContent='Over 2kg \u2014 contact for a quote.';return null;}
+    const grp=COUNTRIES[country],br=INT_BRACKETS.findIndex(b=>w<=b),price=INT_PRICES[grp][br];
+    sp.textContent=grp+' \u00b7 $'+price.toFixed(2);return price;
+  }
+}
+
+function recalc(){
+  const coffee=coffeeTotal(),ship=calcShipping();
+  document.getElementById('t-coffee').textContent='$'+coffee.toFixed(2);
+  document.getElementById('t-ship').textContent=fulfil==='shipping'?(ship===null?'\u2014':'$'+ship.toFixed(2)):'Free';
+  document.getElementById('t-grand').textContent='$'+(coffee+(ship||0)).toFixed(2);
+  let addrOk=true;
+  if(fulfil==='delivery')addrOk=v('d-suburb')&&v('d-street');
+  else if(fulfil==='shipping'){const dest=document.getElementById('ship-dest').value;if(dest==='au')addrOk=v('s-street')&&v('s-suburb')&&v('s-state')&&v('postcode').length===4&&ship!==null;else addrOk=v('country')&&v('i-street')&&v('i-suburb')&&v('i-state')&&v('i-postcode')&&ship!==null;}
+  document.getElementById('submit').disabled=!(bagCount()>0&&v('name')&&v('email')&&v('phone')&&addrOk);
+}
+
+function placeOrder(){
+  const btn=document.getElementById('submit');
+  btn.disabled=true;btn.textContent='Placing order...';
+  const grand=coffeeTotal()+(calcShipping()||0);
+  const payload={
+    name:v('name'),email:v('email'),phone:v('phone'),
+    items:buildItems(),
+    totalWeight:totalCoffeeGrams(),
+    fulfillment:fulfil,
+    address:buildAddress(),
+    shippingCost:calcShipping()||0,
+    total:grand,
+    note:v('note'),
+    newsletter:document.getElementById('newsletter').checked?'Yes':'No',
+    qtys:buildQtys(),
+  };
+  fetch(BASE_URL + '?action=submitOrder', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+  .then(r => r.json())
+  .then(() => {
+    document.getElementById('ty-amount').textContent='Amount: $'+grand.toFixed(2);
+    document.getElementById('order-form').style.display='none';
+    document.getElementById('thankyou').style.display='block';
+    window.scrollTo(0,0);
+  })
+  .catch(() => {
+    btn.disabled=false;btn.textContent='Place order';
+    document.getElementById('submit-err').textContent='Something went wrong. Please try again.';
+  });
+}
+setFulfil('pickup');
+</script></body></html>
