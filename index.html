@@ -91,7 +91,7 @@ textarea{resize:vertical;min-height:80px}
   <div class="card">
     <div class="section-head"><span class="dot"></span><h2>How would you like it?</h2></div>
     <div class="fulfil-opts">
-      <div class="fulfil" data-method="shipping" onclick="setFulfil('shipping')">
+      <div class="fulfil active" data-method="shipping" onclick="setFulfil('shipping')">
         <div class="fulfil-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg></div>
         <div style="font-size:13px;font-weight:500">Shipping</div>
         <div style="font-size:11px;color:var(--muted);margin-top:2px">Locally &amp; worldwide</div>
@@ -101,7 +101,7 @@ textarea{resize:vertical;min-height:80px}
         <div style="font-size:13px;font-weight:500">Local Delivery</div>
         <div style="font-size:11px;color:var(--muted);margin-top:2px">3km from Mount Lawley 6050</div>
       </div>
-      <div class="fulfil active" data-method="pickup" onclick="setFulfil('pickup')">
+      <div class="fulfil" data-method="pickup" onclick="setFulfil('pickup')">
         <div class="fulfil-icon"><svg viewBox="0 0 24 24"><path d="M6 2 3 6v13a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
         <div style="font-size:13px;font-weight:500">Pickup</div>
         <div style="font-size:11px;color:var(--muted);margin-top:2px">Mount Lawley 6050</div>
@@ -412,5 +412,5 @@ function placeOrder(){
     document.getElementById('submit-err').textContent='Something went wrong. Please try again.';
   });
 }
-setFulfil('pickup');
+setFulfil('shipping');
 </script></body></html>
