@@ -243,7 +243,7 @@ const PRODUCTS = [
   { id:'chelle-filter',    name:'Chelle',           roast:'Filter',   size:'100g', sub:'Ethiopia \u00b7 Washed \u00b7 Candied Lemon, Apricot, Floral', variety:'Ethiopian Landrace', why:"This is a classic Ethiopian washed coffee, a classic from my favourite region \u2014 Yirgacheffe. Notable for its high quality floral qualities, tea-like body, and fresh apricot fruitiness. This is the classic done right \u2014 for the lovers of clean, pristine coffees.", price:12, weight:120 },
   { id:'guribea-espresso', name:'Guribea',          roast:'Espresso', size:'150g', sub:'Ethiopia \u00b7 Natural \u00b7 Blood Orange, Cherry, Marzipan', variety:'Ethiopian Landrace',    why:"A very sweet Ethiopian natural perfect for espresso lovers. Syrupy, sweet, with a hint of fruit and big body. Suits milk-based drinks beautifully too.", price:13, weight:175 },
   { id:'anamelva-filter',  name:'Ana Melva',        roast:'Filter',   size:'100g', sub:'Peru \u00b7 Washed \u00b7 Mandarin, Red Apple, Panela',         variety:'Bourbon + Caturra',     why:"A classic Peruvian done right. Peru is the underdog to Colombia but slowly emerging as a solid quality origin. Ana Melva is a young producer who takes great care with her extended washed process, keeping the structure and cleanness of the cup, then precision drying in solar dryers. Very pronounced sweetness with bright, lively, elegant acidity.", price:12, weight:120 },
-  { id:'primerio-filter',  name:'Primerio \u2014 Winner #1', roast:'Filter', size:'100g', sub:'Timor-Leste \u00b7 Double Anaerobic \u00b7 Plum Jam, Cherry Pie, Dutch Cocoa', variety:'Typica + Timor Hybrid', why:"This coffee won first place in a regional competition in Timor-Leste. An incredibly rare find and unique micro lot that tastes nothing like any other Timor-Leste coffee you've had before. Enjoy its big ripe fruit notes with a lingering cacao-like finish.", price:16, weight:120 },
+  { id:'primerio-filter',  name:'Primerio Winner #1', roast:'Filter', size:'100g', sub:'Timor-Leste \u00b7 Double Anaerobic \u00b7 Plum Jam, Cherry Pie, Dutch Cocoa', variety:'Typica + Timor Hybrid', why:"This coffee won first place in a regional competition in Timor-Leste. An incredibly rare find and unique micro lot that tastes nothing like any other Timor-Leste coffee you've had before. Enjoy its big ripe fruit notes with a lingering cacao-like finish.", price:16, weight:120 },
 ];
 
 const DOM={Small:{max:500,p:[10.04,10.59,11.15]},Medium:{max:1000,p:[13.73,14.49,15.25]},Large:{max:3000,p:[17.37,18.34,19.30]},XL:{max:5000,p:[20.97,22.14,23.30]}};
@@ -283,27 +283,27 @@ function renderProducts(){
   PRODUCTS.forEach(p=>{
     const avail=stock[p.id]===undefined?999:stock[p.id];
     const sold=avail<=0;
-    el.innerHTML+=\`
-      <div class="product\${sold?' soldout':''}">
+    el.innerHTML+=`
+      <div class="product${sold?' soldout':''}">
         <div style="flex:1;padding-right:12px">
-          <div class="p-name">\${p.name} &mdash; \${p.roast}</div>
-          <div class="p-sub">\${p.sub}</div>
-          <div class="p-sub" style="color:#b08d4f;margin-top:4px">Variety: \${p.variety}</div>
-          <div class="p-sub">\${p.size} &middot; $\${p.price}</div>
-          \${sold?'<div class="sold-badge">Sold Out</div>':''}
+          <div class="p-name">${p.name} &mdash; ${p.roast}</div>
+          <div class="p-sub">${p.sub}</div>
+          <div class="p-sub" style="color:#b08d4f;margin-top:4px">Variety: ${p.variety}</div>
+          <div class="p-sub">${p.size} &middot; $${p.price}</div>
+          ${sold?'<div class="sold-badge">Sold Out</div>':''}
           <details style="margin-top:8px">
             <summary style="font-size:11px;color:#1f4e79;cursor:pointer;letter-spacing:.03em;list-style:none;display:flex;align-items:center;gap:5px">
               <span style="font-size:10px">&#9654;</span> Why did Rummy choose this?
             </summary>
-            <div style="font-size:11.5px;color:#5a6b7a;line-height:1.75;margin-top:8px;padding:10px 12px;background:#eaf2fb;border-radius:8px;border-left:2px solid #b08d4f">\${p.why}</div>
+            <div style="font-size:11.5px;color:#5a6b7a;line-height:1.75;margin-top:8px;padding:10px 12px;background:#eaf2fb;border-radius:8px;border-left:2px solid #b08d4f">${p.why}</div>
           </details>
         </div>
         <div class="stepper" style="flex-shrink:0">
-          <button class="step-btn" onclick="bump('\${p.id}',-1)" \${sold?'disabled':''}>&#8722;</button>
-          <span class="step-val" id="q-\${p.id}">0</span>
-          <button class="step-btn" onclick="bump('\${p.id}',1)" \${sold?'disabled':''}>+</button>
+          <button class="step-btn" onclick="bump('${p.id}',-1)" ${sold?'disabled':''}>&#8722;</button>
+          <span class="step-val" id="q-${p.id}">0</span>
+          <button class="step-btn" onclick="bump('${p.id}',1)" ${sold?'disabled':''}>+</button>
         </div>
-      </div>\`;
+      </div>`;
   });
 }
 
