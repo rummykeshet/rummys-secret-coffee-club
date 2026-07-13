@@ -22,9 +22,11 @@ h1{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;margin-
 .dot{width:5px;height:5px;border-radius:50%;background:var(--gold)}
 .product{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
 .product:last-child{border-bottom:none}
-.product.soldout{opacity:.5}
+.product.soldout{opacity:.55}
 .p-name{font-size:14px}.p-sub{font-size:11px;color:var(--muted);margin-top:3px}
-.sold-badge{display:inline-block;font-size:10px;padding:2px 8px;background:#fee;border:1px solid #fcc;border-radius:10px;color:#c0392b;margin-top:4px}
+.p-label{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.75}
+.p-label b{color:#6a7888;font-weight:500}
+.sold-badge{display:inline-block;font-size:10px;padding:2px 8px;background:#fee;border:1px solid #fcc;border-radius:10px;color:#c0392b;margin-top:6px}
 .stepper{display:flex;align-items:center;gap:12px}
 .step-btn{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:var(--beige);color:var(--navy);font-size:18px;cursor:pointer;line-height:1;transition:all .15s}
 .step-btn:hover:not(:disabled){border-color:var(--navy);background:var(--sky)}
@@ -63,6 +65,9 @@ textarea{resize:vertical;min-height:80px}
 .news-box{display:flex;align-items:flex-start;gap:10px;margin-top:16px;padding:14px;background:#eaf5ef;border:1px solid #b0d8c0;border-radius:11px}
 .news-box input{width:18px;height:18px;flex-shrink:0;margin-top:1px;accent-color:#2d7a4f}
 .news-box label{margin-top:0;text-transform:none;font-size:13px;color:#2a3a4a;letter-spacing:0;cursor:pointer;line-height:1.55}
+.archived-toggle{margin-top:18px;border-top:1px solid var(--line);padding-top:6px}
+.archived-toggle summary{font-size:11px;color:#8a8270;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;list-style:none;display:flex;align-items:center;gap:6px;padding:10px 0}
+.archived-toggle summary::-webkit-details-marker{display:none}
 </style></head><body>
 
 <div class="wrap" id="order-form" style="display:none">
@@ -78,8 +83,8 @@ textarea{resize:vertical;min-height:80px}
   <div class="card">
     <h1>Who am I?</h1>
     <div class="about">
-      <p>After many years in coffee roasting and consulting, I've stepped back to roast at a smaller scale &mdash; reconnecting with community and the people I care about. This is about great coffee for even greater people.</p>
-      <p>I'm sourcing some of the most exceptional coffees I can find &mdash; exclusive micro and nano lots I'm passionate about, from amazing people. I want to share that journey with you.</p>
+      <p>After many years in coffee roasting and consulting, I've stepped back to roast at a smaller scale, reconnecting with community and the people I care about. This is about great coffee for even greater people.</p>
+      <p>I'm sourcing some of the most exceptional coffees I can find: exclusive micro and nano lots I'm passionate about, from amazing people. I want to share that journey with you.</p>
       <p>This is my passion project. A transitional brand. It won't last forever, so enjoy it while it's here.</p>
       <p>If you're here, you're part of my community. Buckle up, have fun.</p>
     </div>
@@ -87,6 +92,10 @@ textarea{resize:vertical;min-height:80px}
   <div class="card">
     <div class="section-head"><span class="dot"></span><h2>Choose your coffee</h2></div>
     <div id="products"><div class="loading">Loading available coffees...</div></div>
+    <details class="archived-toggle">
+      <summary><span style="font-size:10px">&#9654;</span> Archived coffees (sold out)</summary>
+      <div id="archived"></div>
+    </details>
   </div>
   <div class="card">
     <div class="section-head"><span class="dot"></span><h2>How would you like it?</h2></div>
@@ -188,7 +197,7 @@ textarea{resize:vertical;min-height:80px}
     <textarea id="note" placeholder="Anything you'd like Rummy to know..."></textarea>
     <div class="news-box">
       <input type="checkbox" id="newsletter" checked>
-      <label for="newsletter">Join Rummy's Secret Newsletter &mdash; be the first to know when new coffees drop</label>
+      <label for="newsletter">Join Rummy's Secret Newsletter, be the first to know when new coffees drop</label>
     </div>
   </div>
   <div class="card total-card">
@@ -196,7 +205,7 @@ textarea{resize:vertical;min-height:80px}
     <div class="total-row"><span>Shipping</span><span id="t-ship">Free</span></div>
     <div class="total-row grand"><span>Total</span><span id="t-grand">$0</span></div>
     <div class="pay">Payment via <b>PayID</b>: 0497 866 615<br>
-    Please transfer once you've ordered. International customers &mdash; contact Rummy for bank transfer details.</div>
+    Please transfer once you've ordered. International customers, contact Rummy for bank transfer details.</div>
         <div style="text-align:center;font-size:11.5px;color:#b08d4f;font-weight:500;margin-top:14px">Next roast: 20th July. No roast on 13th July. Your order ships from 20th July.</div>
     <button class="btn" id="submit" onclick="placeOrder()" disabled>Place order</button>
     <div class="err" id="submit-err" style="text-align:center;margin-top:10px"></div>
@@ -231,7 +240,7 @@ textarea{resize:vertical;min-height:80px}
     <div style="border-top:1px solid var(--line);padding-top:20px">
       <div class="hero-mark" style="margin-bottom:16px"></div>
       <p class="ty-quote">Thank you, from the bottom of my cup, for joining our lovely little community. I hope you enjoy the coffees.</p>
-      <p style="font-size:12px;color:#8a8270;margin-top:14px">&mdash; Rummy</p>
+      <p style="font-size:12px;color:#8a8270;margin-top:14px">- Rummy</p>
     </div>
   </div>
 </div>
@@ -240,14 +249,18 @@ textarea{resize:vertical;min-height:80px}
 const BASE_URL = 'https://script.google.com/macros/s/AKfycbxUrCGIMTUE7oCOYKQGdjeTXAUGdNblNKaPLdASrNsSP5QoDlX7uX4JF_k6HtFfWTguhQ/exec';
 
 const PRODUCTS = [
-  { id:'kaleidoscope',     name:'Kaleidoscope',     roast:'Filter',   size:'100g', sub:'Colombia \u00b7 Advanced Fermentation Natural \u00b7 Raspberry Lollies, Grape Bubblegum, Blue Curacao', variety:'Pink Bourbon, SL28, Typica + more', why:"This coffee tastes like unicorn tears, space lasers and a kids\u2019 birthday party and more! A carefully curated \u201cfruit salad\u201d of micro lots from the best producers in Colombia such as El Diviso, Las Flores, Los Nogales, Motta, and more. Recently my friends at Offshoot have been killing it on the competition stage, with Ami placing 3rd in the WA Barista competitions and Calvin Tang placing 1st in the world\u2019s first official Moccamaster competition. As soon as this coffee hits your grinder burrs, based on the smell alone you\u2019ll know you\u2019re in for a psychedelic trip of a coffee experience!!", price:23, weight:120 },
-  { id:'chelle-filter',    name:'Chelle',           roast:'Filter \u00b7 Roasted on the Aillio Bullet', size:'100g', sub:'Ethiopia \u00b7 Washed \u00b7 Candied Lemon, Apricot, Floral', variety:'Ethiopian Landrace', why:"This is a classic Ethiopian washed coffee, a classic from my favourite region \u2014 Yirgacheffe. Notable for its high quality floral qualities, tea-like body, and fresh apricot fruitiness. This is the classic done right \u2014 for the lovers of clean, pristine coffees. This batch is roasted on my usual roaster, the Aillio Bullet. Buy a bag of this and a bag of the Typhoon version and try the differences!", price:12, weight:120 },
-  { id:'chelle-typhoon',   name:'Chelle',           roast:'Filter \u00b7 Roasted on the Typhoon',       size:'100g', sub:'Ethiopia \u00b7 Washed \u00b7 Candied Lemon, Apricot, Floral \u00b7 Roast date 01/07/2026', variety:'Ethiopian Landrace', why:"This is a classic Ethiopian washed coffee, a classic from my favourite region \u2014 Yirgacheffe. Notable for its high quality floral qualities, tea-like body, and fresh apricot fruitiness. This is the classic done right \u2014 for the lovers of clean, pristine coffees. I had a chance to play around with the Typhoon roaster, which focuses on fluid bed high convection heat. This allows for absolute clarity and control in the roast, the total opposite roasting technology to my usual roaster, the Aillio Bullet. Buy a bag of each and try the differences!", price:12, weight:120 },
-  { id:'lasflores-filter',   name:'Las Flores - Ombligon', roast:'Filter',   size:'100g', sub:'Colombia \u00b7 Anaerobic Thermal Shock \u00b7 Pomegranate, Maraschino Cherry, Passionfruit', variety:'Ombligon', why:"This experimental lot has become somewhat of a \u201cclassic\u201d in the world of funky Colombian fermentations, from one of Rummy\u2019s favourite Colombian producers, Jhoan Vergara. With distinct red fruit notes and tropical notes, this coffee\u2019s big funky flavours are fun and exciting.", price:17, weight:120 },
-  { id:'lasflores-espresso', name:'Las Flores - Ombligon', roast:'Espresso', size:'100g', sub:'Colombia \u00b7 Anaerobic Thermal Shock \u00b7 Pomegranate, Maraschino Cherry, Dark Chocolate', variety:'Ombligon', why:"This experimental lot has become somewhat of a \u201cclassic\u201d in the world of funky Colombian fermentations, from one of Rummy\u2019s favourite Colombian producers, Jhoan Vergara. With distinct red fruit notes and tropical notes, this coffee\u2019s big funky flavours are fun and exciting. For espresso, you have to try it with milk to get the sweetest, richest, next level milky.", price:17, weight:120 },
-  { id:'guribea-espresso', name:'Guribea',          roast:'Espresso', size:'150g', sub:'Ethiopia \u00b7 Natural \u00b7 Blood Orange, Cherry, Marzipan', variety:'Ethiopian Landrace',    why:"A very sweet Ethiopian natural perfect for espresso lovers. Syrupy, sweet, with a hint of fruit and big body. Suits milk-based drinks beautifully too.", price:13, weight:175 },
-  { id:'anamelva-filter',  name:'Ana Melva',        roast:'Filter',   size:'100g', sub:'Peru \u00b7 Washed \u00b7 Mandarin, Red Apple, Panela',         variety:'Bourbon + Caturra',     why:"A classic Peruvian done right. Peru is the underdog to Colombia but slowly emerging as a solid quality origin. Ana Melva is a young producer who takes great care with her extended washed process, keeping the structure and cleanness of the cup, then precision drying in solar dryers. Very pronounced sweetness with bright, lively, elegant acidity.", price:12, weight:120 },
-  { id:'primerio-filter',  name:'Primerio Winner #1', roast:'Filter', size:'100g', sub:'Timor-Leste \u00b7 Double Anaerobic \u00b7 Plum Jam, Cherry Pie, Dutch Cocoa', variety:'Typica + Timor Hybrid', why:"This coffee won first place in a regional competition in Timor-Leste. An incredibly rare find and unique micro lot that tastes nothing like any other Timor-Leste coffee you've had before. Enjoy its big ripe fruit notes with a lingering cacao-like finish.", price:16, weight:120 },
+  { id:'chelle-filter',    name:'Chelle',           roast:'Filter \u00b7 Roasted on the Aillio Bullet', size:'100g', origin:'Ethiopia', process:'Washed', variety:'Ethiopian Landrace', notes:'Candied Lemon, Apricot, Floral', why:"This is a classic Ethiopian washed coffee, a classic from my favourite region, Yirgacheffe. Notable for its high quality floral qualities, tea-like body, and fresh apricot fruitiness. This is the classic done right for the lovers of clean, pristine coffees. This batch is roasted on my usual roaster, the Aillio Bullet. Buy a bag of this and a bag of the Typhoon version and try the differences!", price:12, weight:120 },
+  { id:'chelle-typhoon',   name:'Chelle',           roast:'Filter \u00b7 Roasted on the Typhoon',       size:'100g', origin:'Ethiopia', process:'Washed', variety:'Ethiopian Landrace', notes:'Candied Lemon, Apricot, Floral', extra:'Roast date - 01/07/2026', why:"This is a classic Ethiopian washed coffee, a classic from my favourite region, Yirgacheffe. Notable for its high quality floral qualities, tea-like body, and fresh apricot fruitiness. This is the classic done right for the lovers of clean, pristine coffees. I had a chance to play around with the Typhoon roaster, which focuses on fluid bed high convection heat. This allows for absolute clarity and control in the roast, the total opposite roasting technology to my usual roaster, the Aillio Bullet. Buy a bag of each and try the differences!", price:12, weight:120 },
+  { id:'lasflores-filter',   name:'Las Flores - Ombligon', roast:'Filter',   size:'100g', origin:'Colombia', process:'Anaerobic Thermal Shock', variety:'Ombligon', notes:'Pomegranate, Maraschino Cherry, Passionfruit', why:"This experimental lot has become somewhat of a \u201cclassic\u201d in the world of funky Colombian fermentations, from one of Rummy\u2019s favourite Colombian producers, Jhoan Vergara. With distinct red fruit notes and tropical notes, this coffee\u2019s big funky flavours are fun and exciting.", price:17, weight:120 },
+  { id:'lasflores-espresso', name:'Las Flores - Ombligon', roast:'Espresso', size:'100g', origin:'Colombia', process:'Anaerobic Thermal Shock', variety:'Ombligon', notes:'Pomegranate, Maraschino Cherry, Dark Chocolate', why:"This experimental lot has become somewhat of a \u201cclassic\u201d in the world of funky Colombian fermentations, from one of Rummy\u2019s favourite Colombian producers, Jhoan Vergara. With distinct red fruit notes and tropical notes, this coffee\u2019s big funky flavours are fun and exciting. For espresso, you have to try it with milk to get the sweetest, richest, next level milky.", price:17, weight:120 },
+  { id:'danche-filter',    name:'Danche - Red Honey', roast:'Filter', size:'100g', origin:'Ethiopia', process:'Red Honey', variety:'Ethiopian Landrace', notes:'Peach, Floral, Candy', why:"This is one of the most expressive and cleanest Ethiopians I\u2019ve had recently. Back due to popular demand. Lemon iced tea vibes for days, juicy clean coffee that\u2019s special enough to be memorable and savoured, and also great for every day drinking.", price:14, weight:120 },
+  { id:'guribea-espresso', name:'Guribea',          roast:'Espresso', size:'150g', origin:'Ethiopia', process:'Natural', variety:'Ethiopian Landrace', notes:'Blood Orange, Cherry, Marzipan', why:"A very sweet Ethiopian natural perfect for espresso lovers. Syrupy, sweet, with a hint of fruit and big body. Suits milk-based drinks beautifully too.", price:13, weight:175 },
+  { id:'anamelva-filter',  name:'Ana Melva',        roast:'Filter',   size:'100g', origin:'Peru', process:'Washed', variety:'Bourbon + Caturra', notes:'Mandarin, Red Apple, Panela', why:"A classic Peruvian done right. Peru is the underdog to Colombia but slowly emerging as a solid quality origin. Ana Melva is a young producer who takes great care with her extended washed process, keeping the structure and cleanness of the cup, then precision drying in solar dryers. Very pronounced sweetness with bright, lively, elegant acidity.", price:12, weight:120 },
+];
+
+const ARCHIVED = [
+  { name:'Kaleidoscope', roast:'Filter', size:'100g', origin:'Colombia', process:'Advanced Fermentation Natural', variety:'Pink Bourbon, SL28, Typica + more', notes:'Raspberry Lollies, Grape Bubblegum, Blue Curacao', why:"This coffee tastes like unicorn tears, space lasers and a kids\u2019 birthday party and more! A carefully curated \u201cfruit salad\u201d of micro lots from the best producers in Colombia such as El Diviso, Las Flores, Los Nogales, Motta, and more. Recently my friends at Offshoot have been killing it on the competition stage, with Ami placing 3rd in the WA Barista competitions and Calvin Tang placing 1st in the world\u2019s first official Moccamaster competition. As soon as this coffee hits your grinder burrs, based on the smell alone you\u2019ll know you\u2019re in for a psychedelic trip of a coffee experience!!" },
+  { name:'Primeiro Winner #1', roast:'Filter', size:'100g', origin:'Timor-Leste', process:'Double Anaerobic', variety:'Typica + Timor Hybrid', notes:'Plum Jam, Cherry Pie, Dutch Cocoa', why:"This coffee won first place in a regional competition in Timor-Leste. An incredibly rare find and unique micro lot that tastes nothing like any other Timor-Leste coffee you've had before. Enjoy its big ripe fruit notes with a lingering cacao-like finish." },
 ];
 
 const DOM={Small:{max:500,p:[10.04,10.59,11.15]},Medium:{max:1000,p:[13.73,14.49,15.25]},Large:{max:3000,p:[17.37,18.34,19.30]},XL:{max:5000,p:[20.97,22.14,23.30]}};
@@ -269,6 +282,7 @@ fetch(BASE_URL + '?action=getStock')
   .then(s => {
     stock = s;
     renderProducts();
+    renderArchived();
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('order-form').style.display = 'block';
     recalc();
@@ -276,10 +290,31 @@ fetch(BASE_URL + '?action=getStock')
   .catch(() => {
     stock = {};
     renderProducts();
+    renderArchived();
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('order-form').style.display = 'block';
     recalc();
   });
+
+function labelBlock(p){
+  return `
+    <div class="p-label">
+      <b>Origin</b> - ${p.origin}<br>
+      <b>Process</b> - ${p.process}<br>
+      <b>Variety</b> - ${p.variety}<br>
+      <b>Notes of</b>: ${p.notes}${p.extra?'<br><b>'+p.extra.split(' - ')[0]+'</b> - '+p.extra.split(' - ')[1]:''}
+    </div>`;
+}
+
+function whyBlock(p){
+  return `
+    <details style="margin-top:8px">
+      <summary style="font-size:11px;color:#1f4e79;cursor:pointer;letter-spacing:.03em;list-style:none;display:flex;align-items:center;gap:5px">
+        <span style="font-size:10px">&#9654;</span> Why did Rummy choose this?
+      </summary>
+      <div style="font-size:11.5px;color:#5a6b7a;line-height:1.75;margin-top:8px;padding:10px 12px;background:#eaf2fb;border-radius:8px;border-left:2px solid #b08d4f">${p.why}</div>
+    </details>`;
+}
 
 function renderProducts(){
   const el=document.getElementById('products');
@@ -290,22 +325,33 @@ function renderProducts(){
     el.innerHTML+=`
       <div class="product${sold?' soldout':''}">
         <div style="flex:1;padding-right:12px">
-          <div class="p-name">${p.name} &mdash; ${p.roast}</div>
-          <div class="p-sub">${p.sub}</div>
-          <div class="p-sub" style="color:#b08d4f;margin-top:4px">Variety: ${p.variety}</div>
+          <div class="p-name">${p.name} - ${p.roast}</div>
+          ${labelBlock(p)}
           <div class="p-sub">${p.size} &middot; $${p.price}</div>
           ${sold?'<div class="sold-badge">Sold Out</div>':''}
-          <details style="margin-top:8px">
-            <summary style="font-size:11px;color:#1f4e79;cursor:pointer;letter-spacing:.03em;list-style:none;display:flex;align-items:center;gap:5px">
-              <span style="font-size:10px">&#9654;</span> Why did Rummy choose this?
-            </summary>
-            <div style="font-size:11.5px;color:#5a6b7a;line-height:1.75;margin-top:8px;padding:10px 12px;background:#eaf2fb;border-radius:8px;border-left:2px solid #b08d4f">${p.why}</div>
-          </details>
+          ${whyBlock(p)}
         </div>
         <div class="stepper" style="flex-shrink:0">
           <button class="step-btn" onclick="bump('${p.id}',-1)" ${sold?'disabled':''}>&#8722;</button>
           <span class="step-val" id="q-${p.id}">0</span>
           <button class="step-btn" onclick="bump('${p.id}',1)" ${sold?'disabled':''}>+</button>
+        </div>
+      </div>`;
+  });
+}
+
+function renderArchived(){
+  const el=document.getElementById('archived');
+  el.innerHTML='';
+  ARCHIVED.forEach(p=>{
+    el.innerHTML+=`
+      <div class="product soldout">
+        <div style="flex:1;padding-right:12px">
+          <div class="p-name">${p.name} - ${p.roast}</div>
+          ${labelBlock(p)}
+          <div class="p-sub">${p.size}</div>
+          <div class="sold-badge">Sold Out</div>
+          ${whyBlock(p)}
         </div>
       </div>`;
   });
@@ -361,13 +407,13 @@ function calcShipping(){
     const pcRaw=v('postcode');if(pcRaw.length!==4)return null;
     const zone=getZone(parseInt(pcRaw));
     let s=null;for(const[n,info]of Object.entries(DOM)){if(w<=info.max){s=[n,info];break;}}
-    if(!s){err.textContent='Over 5kg \u2014 contact for a quote.';return null;}
+    if(!s){err.textContent='Over 5kg, contact for a quote.';return null;}
     const price=s[1].p[zone];
     sp.textContent=s[0]+' satchel \u00b7 '+['Perth metro','Capital/major','Rural'][zone]+' \u00b7 $'+price.toFixed(2);
     return price;
   } else {
     const country=v('country');if(!country)return null;
-    if(w>2000){err.textContent='Over 2kg \u2014 contact for a quote.';return null;}
+    if(w>2000){err.textContent='Over 2kg, contact for a quote.';return null;}
     const grp=COUNTRIES[country],br=INT_BRACKETS.findIndex(b=>w<=b),price=INT_PRICES[grp][br];
     sp.textContent=grp+' \u00b7 $'+price.toFixed(2);return price;
   }
@@ -376,7 +422,7 @@ function calcShipping(){
 function recalc(){
   const coffee=coffeeTotal(),ship=calcShipping();
   document.getElementById('t-coffee').textContent='$'+coffee.toFixed(2);
-  document.getElementById('t-ship').textContent=fulfil==='shipping'?(ship===null?'\u2014':'$'+ship.toFixed(2)):'Free';
+  document.getElementById('t-ship').textContent=fulfil==='shipping'?(ship===null?'-':'$'+ship.toFixed(2)):'Free';
   document.getElementById('t-grand').textContent='$'+(coffee+(ship||0)).toFixed(2);
   let addrOk=true;
   if(fulfil==='delivery')addrOk=v('d-suburb')&&v('d-street');
@@ -418,4 +464,3 @@ function placeOrder(){
 }
 setFulfil('shipping');
 </script></body></html>
- 
