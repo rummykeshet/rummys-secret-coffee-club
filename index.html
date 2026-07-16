@@ -77,8 +77,7 @@ textarea{resize:vertical;min-height:80px}
     <div class="hero-mark"></div>
   </div>
 <div class="banner">
-    <b>Next roast day: 20th July</b> &nbsp;&middot;&nbsp; Taking a break on 13th July<br>
-    Orders placed now will be fulfilled on 20th July
+    <b>Roasting every Monday</b> &nbsp;&middot;&nbsp; Orders cutoff Sunday 23:59
   </div>
   <div class="card">
     <h1>Who am I?</h1>
@@ -201,12 +200,19 @@ textarea{resize:vertical;min-height:80px}
     </div>
   </div>
   <div class="card total-card">
+    <label style="margin-top:0">Discount code (optional)</label>
+    <div style="display:flex;gap:8px">
+      <input type="text" id="discount-code" placeholder="Enter code" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()">
+      <button type="button" onclick="applyDiscount()" style="flex-shrink:0;padding:0 18px;background:var(--navy);color:#fff;border:none;border-radius:9px;font-family:inherit;font-size:13px;cursor:pointer">Apply</button>
+    </div>
+    <div id="discount-msg" style="font-size:11px;margin-top:6px;min-height:14px"></div>
     <div class="total-row"><span>Coffee</span><span id="t-coffee">$0</span></div>
+    <div class="total-row" id="t-discount-row" style="display:none;color:#2d7a4f"><span id="t-discount-label">Discount</span><span id="t-discount-amt">-$0</span></div>
     <div class="total-row"><span>Shipping</span><span id="t-ship">Free</span></div>
     <div class="total-row grand"><span>Total</span><span id="t-grand">$0</span></div>
     <div class="pay">Payment via <b>PayID</b>: 0497 866 615<br>
     Please transfer once you've ordered. International customers, contact Rummy for bank transfer details.</div>
-        <div style="text-align:center;font-size:11.5px;color:#b08d4f;font-weight:500;margin-top:14px">Next roast: 20th July. No roast on 13th July. Your order ships from 20th July.</div>
+        <div style="text-align:center;font-size:11.5px;color:#b08d4f;font-weight:500;margin-top:14px">Roasting every Monday. Orders cutoff Sunday 23:59.</div>
     <button class="btn" id="submit" onclick="placeOrder()" disabled>Place order</button>
     <div class="err" id="submit-err" style="text-align:center;margin-top:10px"></div>
   </div>
@@ -263,6 +269,11 @@ const ARCHIVED = [
   { name:'Primeiro Winner #1', roast:'Filter', size:'100g', origin:'Timor-Leste', process:'Double Anaerobic', variety:'Typica + Timor Hybrid', notes:'Plum Jam, Cherry Pie, Dutch Cocoa', why:"This coffee won first place in a regional competition in Timor-Leste. An incredibly rare find and unique micro lot that tastes nothing like any other Timor-Leste coffee you've had before. Enjoy its big ripe fruit notes with a lingering cacao-like finish." },
 ];
 
+// Wholesale / partner discount codes. Key = code (stored uppercase), value = % off the COFFEE subtotal (not shipping).
+const DISCOUNTS = {
+  'LEEWAYRSCC': 25,
+};
+
 const DOM={Small:{max:500,p:[10.04,10.59,11.15]},Medium:{max:1000,p:[13.73,14.49,15.25]},Large:{max:3000,p:[17.37,18.34,19.30]},XL:{max:5000,p:[20.97,22.14,23.30]}};
 const INT_PRICES={"New Zealand":[15.49,18.67,25.08,31.49,37.91],"China":[18.95,24.70,36.24,47.79,59.33],"Rest of Asia":[18.95,24.70,36.24,47.79,59.33],"Pacific Islands":[18.95,24.70,36.24,47.79,59.33],"USA & Canada":[21.19,27.55,40.09,52.77,65.41],"UK & Ireland":[26.13,32.68,45.89,59.04,72.20],"Major Europe":[26.13,32.68,45.89,59.04,72.20],"Rest of World 1":[26.13,32.68,45.89,59.04,72.20],"Rest of World 2":[31.68,40.28,57.48,74.62,91.82]};
 const INT_BRACKETS=[250,500,1000,1500,2000];
@@ -276,6 +287,8 @@ function getZone(pc){if(inR(pc,PERTH))return 0;if(inR(pc,RURAL))return 2;return 
 const qty={};PRODUCTS.forEach(p=>qty[p.id]=0);
 let stock={};
 let fulfil='shipping';
+let discountPercent=0;
+let discountCodeApplied='';
 
 fetch(BASE_URL + '?action=getStock')
   .then(r => r.json())
@@ -419,11 +432,39 @@ function calcShipping(){
   }
 }
 
+function applyDiscount(){
+  const raw=v('discount-code').trim().toUpperCase();
+  const msg=document.getElementById('discount-msg');
+  if(!raw){discountPercent=0;discountCodeApplied='';msg.textContent='';msg.style.color='#b5793a';recalc();return;}
+  if(DISCOUNTS[raw]){
+    discountPercent=DISCOUNTS[raw];
+    discountCodeApplied=raw;
+    msg.textContent='Code applied: '+discountPercent+'% off your coffee total.';
+    msg.style.color='#2d7a4f';
+  } else {
+    discountPercent=0;
+    discountCodeApplied='';
+    msg.textContent='That code was not recognised.';
+    msg.style.color='#c0392b';
+  }
+  recalc();
+}
+
 function recalc(){
   const coffee=coffeeTotal(),ship=calcShipping();
+  const discountAmt=coffee*discountPercent/100;
+  const coffeeAfterDiscount=coffee-discountAmt;
   document.getElementById('t-coffee').textContent='$'+coffee.toFixed(2);
+  const discRow=document.getElementById('t-discount-row');
+  if(discountPercent>0){
+    discRow.style.display='flex';
+    document.getElementById('t-discount-label').textContent='Discount ('+discountCodeApplied+' '+discountPercent+'%)';
+    document.getElementById('t-discount-amt').textContent='-$'+discountAmt.toFixed(2);
+  } else {
+    discRow.style.display='none';
+  }
   document.getElementById('t-ship').textContent=fulfil==='shipping'?(ship===null?'-':'$'+ship.toFixed(2)):'Free';
-  document.getElementById('t-grand').textContent='$'+(coffee+(ship||0)).toFixed(2);
+  document.getElementById('t-grand').textContent='$'+(coffeeAfterDiscount+(ship||0)).toFixed(2);
   let addrOk=true;
   if(fulfil==='delivery')addrOk=v('d-suburb')&&v('d-street');
   else if(fulfil==='shipping'){const dest=document.getElementById('ship-dest').value;if(dest==='au')addrOk=v('s-street')&&v('s-suburb')&&v('s-state')&&v('postcode').length===4&&ship!==null;else addrOk=v('country')&&v('i-street')&&v('i-suburb')&&v('i-state')&&v('i-postcode')&&ship!==null;}
@@ -433,7 +474,9 @@ function recalc(){
 function placeOrder(){
   const btn=document.getElementById('submit');
   btn.disabled=true;btn.textContent='Placing order...';
-  const grand=coffeeTotal()+(calcShipping()||0);
+  const coffee=coffeeTotal();
+  const discountAmt=coffee*discountPercent/100;
+  const grand=(coffee-discountAmt)+(calcShipping()||0);
   const payload={
     name:v('name'),email:v('email'),phone:v('phone'),
     items:buildItems(),
@@ -441,6 +484,9 @@ function placeOrder(){
     fulfillment:fulfil,
     address:buildAddress(),
     shippingCost:calcShipping()||0,
+    discountCode:discountCodeApplied,
+    discountPercent:discountPercent,
+    discountAmount:discountAmt,
     total:grand,
     note:v('note'),
     newsletter:document.getElementById('newsletter').checked?'Yes':'No',
