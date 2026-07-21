@@ -20,8 +20,9 @@ h1{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;margin-
 .section-head{display:flex;align-items:center;gap:10px;margin-bottom:18px}
 .section-head h2{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--navy)}
 .dot{width:5px;height:5px;border-radius:50%;background:var(--gold)}
-.product{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
-.product:last-child{border-bottom:none}
+#products,#archived{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.product{display:flex;flex-direction:column;padding:14px 12px;border:1px solid var(--line);border-radius:12px;background:#fbf8f1}
+.product .p-body{flex:1}
 .product.soldout{opacity:.55}
 .p-name{font-size:14px}.p-sub{font-size:11px;color:var(--muted);margin-top:3px}
 .p-label{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.75}
@@ -336,19 +337,20 @@ function whyBlock(p){
 function renderProducts(){
   const el=document.getElementById('products');
   el.innerHTML='';
-  PRODUCTS.forEach(p=>{
+  const sorted=PRODUCTS.slice().sort((a,b)=>b.price-a.price);
+  sorted.forEach(p=>{
     const avail=stock[p.id]===undefined?999:stock[p.id];
     const sold=avail<=0;
     el.innerHTML+=`
       <div class="product${sold?' soldout':''}">
-        <div style="flex:1;padding-right:12px">
+        <div class="p-body">
           <div class="p-name">${p.name} - ${p.roast}</div>
           ${labelBlock(p)}
           <div class="p-sub">${p.size} &middot; ${p.oldPrice?'<span style="text-decoration:line-through;color:#a39a82">$'+p.oldPrice+'</span> <b style="color:#c0392b">$'+p.price+'</b> <span style="font-size:9px;background:#fdeaea;color:#c0392b;border:1px solid #f0c0c0;border-radius:8px;padding:1px 6px;letter-spacing:.04em">DISCOUNTED</span>':'$'+p.price}</div>
           ${sold?'<div class="sold-badge">Sold Out</div>':''}
           ${whyBlock(p)}
         </div>
-        <div class="stepper" style="flex-shrink:0">
+        <div class="stepper" style="margin-top:12px;justify-content:center">
           <button class="step-btn" onclick="bump('${p.id}',-1)" ${sold?'disabled':''}>&#8722;</button>
           <span class="step-val" id="q-${p.id}">0</span>
           <button class="step-btn" onclick="bump('${p.id}',1)" ${sold?'disabled':''}>+</button>
@@ -363,7 +365,7 @@ function renderArchived(){
   ARCHIVED.forEach(p=>{
     el.innerHTML+=`
       <div class="product soldout">
-        <div style="flex:1;padding-right:12px">
+        <div class="p-body">
           <div class="p-name">${p.name} - ${p.roast}</div>
           ${labelBlock(p)}
           <div class="p-sub">${p.size}</div>
