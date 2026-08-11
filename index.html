@@ -350,8 +350,7 @@ function whyBlock(p){
 function renderProducts(){
   const el=document.getElementById('products');
   el.innerHTML='';
-  const sorted=PRODUCTS.slice().sort((a,b)=>b.price-a.price);
-  sorted.forEach(p=>{
+  PRODUCTS.forEach(p=>{
     const avail=stock[p.id]===undefined?999:stock[p.id];
     const sold=avail<=0;
     el.innerHTML+=`
