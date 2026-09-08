@@ -69,6 +69,12 @@ textarea{resize:vertical;min-height:80px}
 .archived-toggle{margin-top:18px;border-top:1px solid var(--line);padding-top:6px}
 .archived-toggle summary{font-size:11px;color:#8a8270;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;list-style:none;display:flex;align-items:center;gap:6px;padding:10px 0}
 .archived-toggle summary::-webkit-details-marker{display:none}
+.promo-banner{background:linear-gradient(120deg,var(--navy-deep) 0%,var(--navy) 45%,#8a6a2f 100%);border-radius:16px;padding:24px 22px;margin-bottom:20px;text-align:center;box-shadow:0 10px 26px rgba(31,78,121,.24);position:relative;overflow:hidden}
+.promo-banner::before{content:'';position:absolute;top:-40%;right:-15%;width:200px;height:200px;background:radial-gradient(circle,rgba(255,255,255,.10) 0%,rgba(255,255,255,0) 70%)}
+.promo-kicker{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#f4dfa8;margin-bottom:12px;font-weight:600}
+.promo-headline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:23px;line-height:1.35;color:#fff;margin-bottom:14px;position:relative}
+.promo-sub{font-size:13.5px;color:#eaf2fb;line-height:1.7;position:relative}
+.promo-sub b{color:#ffe6a3;font-weight:600}
 </style></head><body>
 
 <div class="wrap" id="order-form" style="display:none">
@@ -79,6 +85,11 @@ textarea{resize:vertical;min-height:80px}
   </div>
 <div class="banner">
     <b>Roasting every Monday</b> &nbsp;&middot;&nbsp; Orders cutoff Sunday 23:59
+  </div>
+  <div class="promo-banner">
+    <div class="promo-kicker">New</div>
+    <div class="promo-headline">&ldquo;Don&rsquo;t just drink coffee.<br>Discover it.&rdquo;</div>
+    <div class="promo-sub">Buy 3 or more bags and get <b>15% off</b>, automatically.</div>
   </div>
   <div class="card">
     <h1>Who am I?</h1>
@@ -207,6 +218,7 @@ textarea{resize:vertical;min-height:80px}
       <button type="button" onclick="applyDiscount()" style="flex-shrink:0;padding:0 18px;background:var(--navy);color:#fff;border:none;border-radius:9px;font-family:inherit;font-size:13px;cursor:pointer">Apply</button>
     </div>
     <div id="discount-msg" style="font-size:11px;margin-top:6px;min-height:14px"></div>
+    <div style="font-size:10.5px;color:#a39a82;margin-top:2px;margin-bottom:2px">Buy 3 or more bags and get 15% off automatically (best discount applies, does not stack with codes)</div>
     <div class="total-row"><span>Coffee</span><span id="t-coffee">$0</span></div>
     <div class="total-row" id="t-discount-row" style="display:none;color:#2d7a4f"><span id="t-discount-label">Discount</span><span id="t-discount-amt">-$0</span></div>
     <div class="total-row"><span>Shipping</span><span id="t-ship">Free</span></div>
@@ -294,6 +306,11 @@ const DISCOUNTS = {
   'STASGEVERGEVER': 25,
   'PCNGB25': 25,
 };
+
+// Automatic volume discount: buy this many bags or more, get this % off the coffee subtotal.
+// Does not stack with a discount code above - whichever gives the bigger discount applies.
+const VOLUME_DISCOUNT_MIN_BAGS = 3;
+const VOLUME_DISCOUNT_PERCENT = 15;
 
 const DOM={Small:{max:500,p:[10.04,10.59,11.15]},Medium:{max:1000,p:[13.73,14.49,15.25]},Large:{max:3000,p:[17.37,18.34,19.30]},XL:{max:5000,p:[20.97,22.14,23.30]}};
 const INT_PRICES={"New Zealand":[15.49,18.67,25.08,31.49,37.91],"China":[18.95,24.70,36.24,47.79,59.33],"Rest of Asia":[18.95,24.70,36.24,47.79,59.33],"Pacific Islands":[18.95,24.70,36.24,47.79,59.33],"USA & Canada":[21.19,27.55,40.09,52.77,65.41],"UK & Ireland":[26.13,32.68,45.89,59.04,72.20],"Major Europe":[26.13,32.68,45.89,59.04,72.20],"Rest of World 1":[26.13,32.68,45.89,59.04,72.20],"Rest of World 2":[31.68,40.28,57.48,74.62,91.82]};
@@ -471,15 +488,28 @@ function applyDiscount(){
   recalc();
 }
 
+function computeDiscount(coffee){
+  const codePct = discountPercent;
+  const volPct = bagCount() >= VOLUME_DISCOUNT_MIN_BAGS ? VOLUME_DISCOUNT_PERCENT : 0;
+  if(codePct > 0 && codePct >= volPct){
+    return { pct: codePct, code: discountCodeApplied, label: discountCodeApplied+' '+codePct+'%' };
+  }
+  if(volPct > 0){
+    return { pct: volPct, code: 'VOLUME3+', label: 'Volume discount ('+VOLUME_DISCOUNT_MIN_BAGS+'+ bags) '+volPct+'%' };
+  }
+  return { pct: 0, code: '', label: '' };
+}
+
 function recalc(){
   const coffee=coffeeTotal(),ship=calcShipping();
-  const discountAmt=coffee*discountPercent/100;
+  const disc=computeDiscount(coffee);
+  const discountAmt=coffee*disc.pct/100;
   const coffeeAfterDiscount=coffee-discountAmt;
   document.getElementById('t-coffee').textContent='$'+coffee.toFixed(2);
   const discRow=document.getElementById('t-discount-row');
-  if(discountPercent>0){
+  if(disc.pct>0){
     discRow.style.display='flex';
-    document.getElementById('t-discount-label').textContent='Discount ('+discountCodeApplied+' '+discountPercent+'%)';
+    document.getElementById('t-discount-label').textContent='Discount ('+disc.label+')';
     document.getElementById('t-discount-amt').textContent='-$'+discountAmt.toFixed(2);
   } else {
     discRow.style.display='none';
@@ -496,7 +526,8 @@ function placeOrder(){
   const btn=document.getElementById('submit');
   btn.disabled=true;btn.textContent='Placing order...';
   const coffee=coffeeTotal();
-  const discountAmt=coffee*discountPercent/100;
+  const disc=computeDiscount(coffee);
+  const discountAmt=coffee*disc.pct/100;
   const grand=(coffee-discountAmt)+(calcShipping()||0);
   const payload={
     name:v('name'),email:v('email'),phone:v('phone'),
@@ -505,8 +536,8 @@ function placeOrder(){
     fulfillment:fulfil,
     address:buildAddress(),
     shippingCost:calcShipping()||0,
-    discountCode:discountCodeApplied,
-    discountPercent:discountPercent,
+    discountCode:disc.code,
+    discountPercent:disc.pct,
     discountAmount:discountAmt,
     total:grand,
     note:v('note'),
