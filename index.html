@@ -27,6 +27,8 @@ h1{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;margin-
 .p-name{font-size:14px}.p-sub{font-size:11px;color:var(--muted);margin-top:3px}
 .p-label{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.75}
 .p-label b{color:#6a7888;font-weight:500}
+.funk{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+.funk-title{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:4px}
 .sold-badge{display:inline-block;font-size:10px;padding:2px 8px;background:#fee;border:1px solid #fcc;border-radius:10px;color:#c0392b;margin-top:6px}
 .stepper{display:flex;align-items:center;gap:12px}
 .step-btn{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:var(--beige);color:var(--navy);font-size:18px;cursor:pointer;line-height:1;transition:all .15s}
@@ -274,15 +276,15 @@ textarea{resize:vertical;min-height:80px}
 const BASE_URL = 'https://script.google.com/macros/s/AKfycbxUrCGIMTUE7oCOYKQGdjeTXAUGdNblNKaPLdASrNsSP5QoDlX7uX4JF_k6HtFfWTguhQ/exec';
 
 const PRODUCTS = [
-  { id:'iris-filter', name:'Iris Estate - Terroir', roast:'Filter', size:'100g', origin:'Panama, Volcan', process:'Washed', variety:'Geisha', notes:'Candied Lime, Bergamot, Jasmine', why:"For me this represents the most sought after coffee in the world. A true classic Geisha from Panama, grown at high elevation between 1850 and 2300 masl and processed in the most classic way. This is it: benchmark classic Panamanian washed Geisha, exactly as it should be. Very citric and floral, with a sweet candy sweetness.", price:60, weight:120 },
-  { id:'losnogales-filter', name:'Los Nogales - Typica', roast:'Filter', size:'100g', origin:'Colombia', process:'Extended Washed', variety:'Typica', notes:'Concord Grape, Tart Tatin, Chrysanthemum', why:"Los Nogales have long produced incredible, memorable Colombian coffees using clever fermentation techniques. This lot leans heavily into enhancing the fruity character of the Typica variety, creating a complex and interesting cup that is clean, clear and impressive.", price:24, weight:120 },
-  { id:'kiangai-filter', name:'Kiangai', roast:'Filter', size:'100g', origin:'Kenya', process:'Washed', variety:'SL28, SL34, Ruiru 11, Batian', notes:'Mixed Berry, Red Grapefruit, Brown Sugar', why:"A good classic washed Kenyan is a staple I have always cherished fondly. Clean berry acidity paired with lots of sugars. This is one of the hallmarks of specialty washed processed coffee.", price:15, weight:120 },
-  { id:'chevas-filter', name:'Chevas Estate - Mosto Natural', roast:'Filter', size:'100g', origin:'Panama', process:'Mosto Natural', variety:'Geisha', notes:'Peach Nectar, Grapefruit, Frangipani', why:"Panamanian Geishas are some of the world\u2019s most revered coffees, prized for their delicate florals and clean cup. This lot was hand-picked at the source by Tony Bui Nguyen of Brim Coffee (Vietnam), who I tasked with finding me something unique and delicious straight from Panama, and he chose this beauty on the cupping table. It\u2019s a natural process, dried in full cherry on raised beds, but with a twist: the cherries are drizzled with \u201cmosto\u201d, the nutrient- and microbe-rich liquid released during a separate fermentation, adding another layer of complexity and depth to the cup.", price:48, weight:120 },
-  { id:'chelle-filter',    name:'Chelle',           roast:'Filter \u00b7 Roasted on the Aillio Bullet', size:'150g', origin:'Ethiopia', process:'Washed', variety:'Ethiopian Landrace', notes:'Candied Lemon, Apricot, Floral', why:"This is a classic Ethiopian washed coffee, a classic from my favourite region, Yirgacheffe. Notable for its high quality floral qualities, tea-like body, and fresh apricot fruitiness. This is the classic done right for the lovers of clean, pristine coffees. This batch is roasted on my usual roaster, the Aillio Bullet.", price:17, weight:170 },
-  { id:'chelle-espresso',  name:'Chelle',           roast:'Espresso \u00b7 Roasted on the Aillio Bullet', size:'150g', origin:'Ethiopia', process:'Washed', variety:'Ethiopian Landrace', notes:'Marmalade, Apricot Jam, Berries', why:"This is a classic Ethiopian washed coffee, a classic from my favourite region, Yirgacheffe. Notable for its high quality floral qualities, tea-like body, and fresh apricot fruitiness. This is the classic done right for the lovers of clean, pristine coffees. This batch is roasted on my usual roaster, the Aillio Bullet, for espresso.", price:17, weight:170 },
-  { id:'lasflores-filter',   name:'Las Flores - Ombligon', roast:'Filter',   size:'100g', origin:'Colombia', process:'Anaerobic Thermal Shock', variety:'Ombligon', notes:'Pomegranate, Maraschino Cherry, Passionfruit', why:"This experimental lot has become somewhat of a \u201cclassic\u201d in the world of funky Colombian fermentations, from one of Rummy\u2019s favourite Colombian producers, Jhoan Vergara. With distinct red fruit notes and tropical notes, this coffee\u2019s big funky flavours are fun and exciting.", price:17, weight:120 },
-  { id:'lasflores-espresso', name:'Las Flores - Ombligon', roast:'Espresso', size:'100g', origin:'Colombia', process:'Anaerobic Thermal Shock', variety:'Ombligon', notes:'Pomegranate, Maraschino Cherry, Dark Chocolate', why:"This experimental lot has become somewhat of a \u201cclassic\u201d in the world of funky Colombian fermentations, from one of Rummy\u2019s favourite Colombian producers, Jhoan Vergara. With distinct red fruit notes and tropical notes, this coffee\u2019s big funky flavours are fun and exciting. For espresso, you have to try it with milk to get the sweetest, richest, next level milky.", price:17, weight:120 },
-  { id:'thiagocorsi-filter', name:'Thiago Corsi - Sidra', roast:'Filter', size:'100g', origin:'Brazil', process:'Natural', variety:'Sidra', notes:'Lychee, Cashew, Elderflower', why:"Rummy sourced this coffee from Brazil using connections from his trip to Brazil back in 2019. Brazil has a lot of untapped excellent qualities that we normally don\u2019t get to taste here in Australia. This particular lot, from a previous Cup of Excellence winner, was air flown to Perth to preserve its excellent tropical and floral qualities.", price:17, weight:120 },
+  { id:'iris-filter', name:'Iris Estate - Terroir', roast:'Filter', size:'100g', origin:'Panama, Volcan', process:'Washed', variety:'Geisha', notes:'Candied Lime, Bergamot, Jasmine', why:"For me this represents the most sought after coffee in the world. A true classic Geisha from Panama, grown at high elevation between 1850 and 2300 masl and processed in the most classic way. This is it: benchmark classic Panamanian washed Geisha, exactly as it should be. Very citric and floral, with a sweet candy sweetness.", funk:1, price:60, weight:120 },
+  { id:'losnogales-filter', name:'Los Nogales - Typica', roast:'Filter', size:'100g', origin:'Colombia', process:'Extended Washed', variety:'Typica', notes:'Concord Grape, Tart Tatin, Chrysanthemum', why:"Los Nogales have long produced incredible, memorable Colombian coffees using clever fermentation techniques. This lot leans heavily into enhancing the fruity character of the Typica variety, creating a complex and interesting cup that is clean, clear and impressive.", funk:5, price:24, weight:120 },
+  { id:'kiangai-filter', name:'Kiangai', roast:'Filter', size:'100g', origin:'Kenya', process:'Washed', variety:'SL28, SL34, Ruiru 11, Batian', notes:'Mixed Berry, Red Grapefruit, Brown Sugar', why:"A good classic washed Kenyan is a staple I have always cherished fondly. Clean berry acidity paired with lots of sugars. This is one of the hallmarks of specialty washed processed coffee.", funk:2, price:15, weight:120 },
+  { id:'chevas-filter', name:'Chevas Estate - Mosto Natural', roast:'Filter', size:'100g', origin:'Panama', process:'Mosto Natural', variety:'Geisha', notes:'Peach Nectar, Grapefruit, Frangipani', why:"Panamanian Geishas are some of the world\u2019s most revered coffees, prized for their delicate florals and clean cup. This lot was hand-picked at the source by Tony Bui Nguyen of Brim Coffee (Vietnam), who I tasked with finding me something unique and delicious straight from Panama, and he chose this beauty on the cupping table. It\u2019s a natural process, dried in full cherry on raised beds, but with a twist: the cherries are drizzled with \u201cmosto\u201d, the nutrient- and microbe-rich liquid released during a separate fermentation, adding another layer of complexity and depth to the cup.", funk:3, price:48, weight:120 },
+  { id:'chelle-filter',    name:'Chelle',           roast:'Filter \u00b7 Roasted on the Aillio Bullet', size:'150g', origin:'Ethiopia', process:'Washed', variety:'Ethiopian Landrace', notes:'Candied Lemon, Apricot, Floral', why:"This is a classic Ethiopian washed coffee, a classic from my favourite region, Yirgacheffe. Notable for its high quality floral qualities, tea-like body, and fresh apricot fruitiness. This is the classic done right for the lovers of clean, pristine coffees. This batch is roasted on my usual roaster, the Aillio Bullet.", funk:2, price:17, weight:170 },
+  { id:'chelle-espresso',  name:'Chelle',           roast:'Espresso \u00b7 Roasted on the Aillio Bullet', size:'150g', origin:'Ethiopia', process:'Washed', variety:'Ethiopian Landrace', notes:'Marmalade, Apricot Jam, Berries', why:"This is a classic Ethiopian washed coffee, a classic from my favourite region, Yirgacheffe. Notable for its high quality floral qualities, tea-like body, and fresh apricot fruitiness. This is the classic done right for the lovers of clean, pristine coffees. This batch is roasted on my usual roaster, the Aillio Bullet, for espresso.", funk:2, price:17, weight:170 },
+  { id:'lasflores-filter',   name:'Las Flores - Ombligon', roast:'Filter',   size:'100g', origin:'Colombia', process:'Anaerobic Thermal Shock', variety:'Ombligon', notes:'Pomegranate, Maraschino Cherry, Passionfruit', why:"This experimental lot has become somewhat of a \u201cclassic\u201d in the world of funky Colombian fermentations, from one of Rummy\u2019s favourite Colombian producers, Jhoan Vergara. With distinct red fruit notes and tropical notes, this coffee\u2019s big funky flavours are fun and exciting.", funk:8, price:17, weight:120 },
+  { id:'lasflores-espresso', name:'Las Flores - Ombligon', roast:'Espresso', size:'100g', origin:'Colombia', process:'Anaerobic Thermal Shock', variety:'Ombligon', notes:'Pomegranate, Maraschino Cherry, Dark Chocolate', why:"This experimental lot has become somewhat of a \u201cclassic\u201d in the world of funky Colombian fermentations, from one of Rummy\u2019s favourite Colombian producers, Jhoan Vergara. With distinct red fruit notes and tropical notes, this coffee\u2019s big funky flavours are fun and exciting. For espresso, you have to try it with milk to get the sweetest, richest, next level milky.", funk:8, price:17, weight:120 },
+  { id:'thiagocorsi-filter', name:'Thiago Corsi - Sidra', roast:'Filter', size:'100g', origin:'Brazil', process:'Natural', variety:'Sidra', notes:'Lychee, Cashew, Elderflower', why:"Rummy sourced this coffee from Brazil using connections from his trip to Brazil back in 2019. Brazil has a lot of untapped excellent qualities that we normally don\u2019t get to taste here in Australia. This particular lot, from a previous Cup of Excellence winner, was air flown to Perth to preserve its excellent tropical and floral qualities.", funk:4, price:17, weight:120 },
 ];
 
 const ARCHIVED = [
@@ -355,6 +357,30 @@ function labelBlock(p){
     </div>`;
 }
 
+function funkMeter(p){
+  var v=Math.max(1,Math.min(10,Number(p.funk)||1));
+  var cx=100,cy=100,R=76,band=16,rN=62,f=(v-1)/9,ang=Math.PI*(1-f);
+  var tx=(cx+rN*Math.cos(ang)).toFixed(1),ty=(cy-rN*Math.sin(ang)).toFixed(1);
+  var w=5.5;
+  var bx1=(cx+(w/2)*Math.cos(ang+Math.PI/2)).toFixed(1),by1=(cy-(w/2)*Math.sin(ang+Math.PI/2)).toFixed(1);
+  var bx2=(cx+(w/2)*Math.cos(ang-Math.PI/2)).toFixed(1),by2=(cy-(w/2)*Math.sin(ang-Math.PI/2)).toFixed(1);
+  var uid='fg-'+p.id;
+  return `
+    <div class="funk">
+      <div class="funk-title">Funk-o-meter</div>
+      <svg viewBox="0 0 200 130" width="100%" style="max-width:190px;display:block;margin:0 auto" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="${uid}" gradientUnits="userSpaceOnUse" x1="${cx-R}" y1="${cy}" x2="${cx+R}" y2="${cy}">
+          <stop offset="0" stop-color="#2563eb"/><stop offset="0.5" stop-color="#9333ea"/><stop offset="1" stop-color="#dc2626"/></linearGradient></defs>
+        <path d="M ${cx-R} ${cy} A ${R} ${R} 0 0 1 ${cx+R} ${cy}" fill="none" stroke="url(#${uid})" stroke-width="${band}" stroke-linecap="round"/>
+        <polygon points="${bx1},${by1} ${bx2},${by2} ${tx},${ty}" fill="#2a3a4a"/>
+        <circle cx="${cx}" cy="${cy}" r="6.5" fill="#2a3a4a"/>
+        <text x="${cx-R}" y="${cy+20}" text-anchor="start" font-size="12" fill="#2563eb" font-weight="700" font-family="inherit">CLASSIC</text>
+        <text x="${cx}" y="${cy+20}" text-anchor="middle" font-size="11" fill="#8a8270" font-family="inherit">${v}/10</text>
+        <text x="${cx+R}" y="${cy+20}" text-anchor="end" font-size="12" fill="#dc2626" font-weight="700" font-family="inherit">FUNKY</text>
+      </svg>
+    </div>`;
+}
+
 function whyBlock(p){
   return `
     <details style="margin-top:8px">
@@ -379,6 +405,7 @@ function renderProducts(){
           <div class="p-sub">${p.size} &middot; ${p.oldPrice?'<span style="text-decoration:line-through;color:#a39a82">$'+p.oldPrice+'</span> <b style="color:#c0392b">$'+p.price+'</b> <span style="font-size:9px;background:#fdeaea;color:#c0392b;border:1px solid #f0c0c0;border-radius:8px;padding:1px 6px;letter-spacing:.04em">DISCOUNTED</span>':'$'+p.price}</div>
           ${sold?'<div class="sold-badge">Sold Out</div>':''}
           ${whyBlock(p)}
+          ${p.funk?funkMeter(p):''}
         </div>
         <div class="stepper" style="margin-top:12px;justify-content:center">
           <button class="step-btn" onclick="bump('${p.id}',-1)" ${sold?'disabled':''}>&#8722;</button>
