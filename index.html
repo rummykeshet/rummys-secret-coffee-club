@@ -5,8 +5,14 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--navy:#1f4e79;--navy-deep:#163a5c;--gold:#b08d4f;--beige:#f4efe4;--cream:#fffdf8;--ink:#2a3a4a;--muted:#8a8270;--line:#e4dcc8;--sky:#eaf2fb;--sky-line:#c4d8ec}
-body{font-family:'IBM Plex Mono',monospace;background:var(--beige);color:var(--ink);min-height:100vh;padding:24px 18px 40px;-webkit-font-smoothing:antialiased}
-.wrap{max-width:480px;margin:0 auto}
+body{font-family:'IBM Plex Mono',monospace;background:var(--beige);color:var(--ink);min-height:100vh;padding:30px 22px 52px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1140px;margin:0 auto}
+.intro{max-width:720px;margin:0 auto}
+#loading-screen,#thankyou{max-width:620px}
+.checkout{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;align-items:start;margin-bottom:16px}
+.checkout-main .card:last-child{margin-bottom:0}
+.checkout-side .total-card{position:sticky;top:22px;margin-bottom:0}
+@media(max-width:880px){.checkout{grid-template-columns:1fr}.checkout-side .total-card{position:static}}
 .hero{text-align:center;padding:14px 0 26px}
 .hero-mark{width:38px;height:1px;background:var(--gold);margin:0 auto 16px}
 .hero-kicker{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
@@ -15,16 +21,16 @@ body{font-family:'IBM Plex Mono',monospace;background:var(--beige);color:var(--i
 .banner b{color:#fff}
 .card{background:var(--cream);border:1px solid var(--line);border-radius:18px;padding:26px;margin-bottom:16px;box-shadow:0 2px 10px rgba(31,78,121,.05)}
 h1{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;margin-bottom:14px;line-height:1.05;color:var(--navy)}
-.about{font-size:12.5px;color:#5a6b7a;line-height:1.8}
+.about{font-size:13.5px;color:#5a6b7a;line-height:1.85}
 .about p{margin-bottom:9px}.about p:last-child{margin-bottom:0}
 .section-head{display:flex;align-items:center;gap:10px;margin-bottom:18px}
 .section-head h2{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--navy)}
 .dot{width:5px;height:5px;border-radius:50%;background:var(--gold)}
-#products,#archived{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#products,#archived{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:14px}
 .product{display:flex;flex-direction:column;padding:14px 12px;border:1px solid var(--line);border-radius:12px;background:#fbf8f1}
 .product .p-body{flex:1}
 .product.soldout{opacity:.55}
-.p-name{font-size:14px}.p-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.p-name{font-size:14.5px;font-weight:500;line-height:1.35}.p-sub{font-size:12px;color:var(--muted);margin-top:4px}
 .p-label{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.75}
 .p-label b{color:#6a7888;font-weight:500}
 .funk{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
@@ -77,22 +83,43 @@ textarea{resize:vertical;min-height:80px}
 .promo-headline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:23px;line-height:1.35;color:#fff;margin-bottom:14px;position:relative}
 .promo-sub{font-size:13.5px;color:#eaf2fb;line-height:1.7;position:relative}
 .promo-sub b{color:#ffe6a3;font-weight:600}
+.season-banner{background:linear-gradient(120deg,#eaf5ef 0%,#f4efe4 60%,#faf3e6 100%);border:1px solid #b8dcc6;border-radius:14px;padding:14px 18px;text-align:center;margin-bottom:16px;box-shadow:0 4px 14px rgba(45,122,79,.08)}
+.season-kicker{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#2d7a4f;font-weight:600;margin-bottom:6px}
+.season-text{font-size:12.5px;color:#3a5a48;line-height:1.65}
+.season-text b{color:#2d7a4f}
+.funk-explainer{margin-bottom:16px;border:1px solid var(--sky-line);border-radius:12px;background:var(--sky);overflow:hidden}
+.funk-explainer summary{font-size:12px;font-weight:500;color:var(--navy);cursor:pointer;padding:12px 14px;list-style:none;display:flex;align-items:center;justify-content:space-between}
+.funk-explainer summary::-webkit-details-marker{display:none}
+.funk-explainer summary::after{content:'+';font-size:17px;color:var(--gold);line-height:1}
+.funk-explainer[open] summary::after{content:'\2212'}
+.funk-explainer-body{padding:2px 14px 14px;font-size:12px;color:#4a5b6a;line-height:1.7}
+.funk-explainer-body p{margin-bottom:7px}.funk-explainer-body p:last-child{margin-bottom:0}
+#mobile-bar{display:none}
+@media(max-width:640px){
+  body{padding:22px 14px 90px}
+  input,select,textarea{font-size:16px}
+  #products,#archived{grid-template-columns:1fr 1fr;gap:10px}
+  .product{padding:12px 10px}
+  .card{padding:20px 18px}
+  .hero-name{font-size:34px}
+  #mobile-bar.show{display:flex;position:fixed;left:0;right:0;bottom:0;align-items:center;gap:12px;padding:11px 14px;padding-bottom:calc(11px + env(safe-area-inset-bottom));background:rgba(255,253,248,.97);border-top:1px solid var(--line);box-shadow:0 -6px 22px rgba(31,78,121,.14);z-index:100}
+}
 </style></head><body>
 
 <div class="wrap" id="order-form" style="display:none">
+  <div class="intro">
   <div class="hero">
     <div class="hero-kicker">Micro &amp; Nano Lots</div>
     <div class="hero-name">Rummy's Secret<br>Coffee Club</div>
     <div class="hero-mark"></div>
   </div>
+  <div class="promo-banner">
+    <div class="promo-headline">&ldquo;Don&rsquo;t just drink coffee.<br>Discover it.&rdquo;</div>
+    <div class="promo-sub">Buy 3 or more bags and get <b>15% off</b>, automatically.</div>
+  </div>
 <div class="banner">
     <b>Roasting every Monday</b> &nbsp;&middot;&nbsp; Orders cutoff Sunday 23:59<br>
     &#128205;&nbsp;Mount Lawley, WA 6050 &middot; Australia
-  </div>
-  <div class="promo-banner">
-    <div class="promo-kicker">New</div>
-    <div class="promo-headline">&ldquo;Don&rsquo;t just drink coffee.<br>Discover it.&rdquo;</div>
-    <div class="promo-sub">Buy 3 or more bags and get <b>15% off</b>, automatically.</div>
   </div>
   <div class="card">
     <h1>Who am I?</h1>
@@ -103,14 +130,26 @@ textarea{resize:vertical;min-height:80px}
       <p>If you're here, you're part of my community. Buckle up, have fun.</p>
     </div>
   </div>
+  </div>
   <div class="card">
     <div class="section-head"><span class="dot"></span><h2>Choose your coffee</h2></div>
+    <details class="funk-explainer">
+      <summary>What's the Funk-o-meter? &#127919;</summary>
+      <div class="funk-explainer-body">
+        <p>Every coffee has a dial that tells you how wild the cup gets, before you even brew.</p>
+        <p><b style="color:#2563eb">Blue = Classic.</b> Clean, elegant and comforting: caramel and chocolatey cups that work beautifully with milk, plus crisp Kenyans, floral Geishas and the timeless greats.</p>
+        <p><b style="color:#dc2626">Red = Funky.</b> Wild fermentations, tropical fruit-bombs, boozy, lactic, candy-shop chaos that makes you go &ldquo;wait&hellip; that&rsquo;s coffee?!&rdquo;</p>
+        <p>Neither end is better, it&rsquo;s just your mood. Chase the red for adventure, stay blue for a reliable classic.</p>
+      </div>
+    </details>
     <div id="products"><div class="loading">Loading available coffees...</div></div>
     <details class="archived-toggle">
       <summary><span style="font-size:10px">&#9654;</span> Archived coffees (sold out)</summary>
       <div id="archived"></div>
     </details>
   </div>
+  <div class="checkout">
+  <div class="checkout-main">
   <div class="card">
     <div class="section-head"><span class="dot"></span><h2>How would you like it?</h2></div>
     <div class="fulfil-opts">
@@ -214,6 +253,8 @@ textarea{resize:vertical;min-height:80px}
       <label for="newsletter">Join Rummy's Secret Newsletter, be the first to know when new coffees drop</label>
     </div>
   </div>
+  </div>
+  <div class="checkout-side">
   <div class="card total-card">
     <label style="margin-top:0">Discount code (optional)</label>
     <div style="display:flex;gap:8px">
@@ -232,6 +273,15 @@ textarea{resize:vertical;min-height:80px}
     <div id="paycard-note" style="text-align:center;font-size:10.5px;color:#a39a82;margin-top:8px;line-height:1.6">Card payments are securely handled by Stripe.</div>
     <button class="btn" id="submit" onclick="placeOrder()" disabled style="margin-top:12px">Place order &amp; pay via bank transfer</button>
     <div class="err" id="submit-err" style="text-align:center;margin-top:10px"></div>
+  </div>
+  </div>
+  </div>
+  <div id="mobile-bar">
+    <div style="line-height:1.05">
+      <div style="font-size:9.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">Total</div>
+      <div id="mbar-total" style="font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:600;color:var(--navy)">$0</div>
+    </div>
+    <button id="mbar-btn" type="button" style="flex:1;padding:15px;background:linear-gradient(135deg,#5a3fa0,#432f7d);border:none;border-radius:11px;color:#fff;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(90,63,160,.3)">Pay by card</button>
   </div>
 </div>
 
@@ -624,4 +674,26 @@ function placeOrder(){
   });
 }
 setFulfil('shipping');
-</script></body></html>
+</script>
+<script>
+(function(){
+  var g=document.getElementById('t-grand'),bar=document.getElementById('mobile-bar'),
+      mt=document.getElementById('mbar-total'),btn=document.getElementById('mbar-btn'),
+      pc=document.getElementById('paycard'),co=document.querySelector('.checkout');
+  if(!g||!bar||!btn)return;
+  function sync(){
+    mt.textContent=g.textContent;
+    var n=parseFloat((g.textContent||'').replace(/[^0-9.]/g,''))||0;
+    bar.classList.toggle('show',n>0);
+    btn.textContent=(pc&&!pc.disabled)?'Pay by card':'Review & complete';
+  }
+  new MutationObserver(sync).observe(g,{childList:true,characterData:true,subtree:true});
+  if(pc)new MutationObserver(sync).observe(pc,{attributes:true,attributeFilter:['disabled']});
+  sync();
+  btn.addEventListener('click',function(){
+    if(pc&&!pc.disabled){if(typeof payByCard==='function')payByCard();}
+    else{(co||document.getElementById('order-form')).scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+})();
+</script>
+</body></html>
