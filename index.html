@@ -79,6 +79,15 @@ textarea{resize:vertical;min-height:80px}
 .archived-toggle{margin-top:18px;border-top:1px solid var(--line);padding-top:6px}
 .archived-toggle summary{font-size:11px;color:#8a8270;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;list-style:none;display:flex;align-items:center;gap:6px;padding:10px 0}
 .archived-toggle summary::-webkit-details-marker{display:none}
+.archived-toggle+.archived-toggle{margin-top:0}
+.brew-guide-body{font-size:12px;color:#4a5b6a;line-height:1.7;padding:12px 14px 14px;margin-bottom:10px;background:var(--sky);border:1px solid var(--sky-line);border-radius:12px}
+.brew-guide-title{font-weight:700;color:var(--navy);margin-bottom:6px}
+.brew-grid{display:grid;grid-template-columns:auto 1fr;gap:2px 14px}
+.brew-grid .k{color:#8a8270}
+.brew-grid .t{font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums;white-space:nowrap}
+.brew-label{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8a8270;margin:10px 0 4px;padding-top:8px;border-top:1px solid var(--sky-line)}
+.brew-note{margin-top:10px;padding-top:8px;border-top:1px solid var(--sky-line)}
+.brew-note p{margin-bottom:7px}.brew-note p:last-child{margin-bottom:0}
 .award-banner{max-width:520px;margin:0 auto 16px;padding:9px 18px;text-align:center;font-size:12px;letter-spacing:.06em;color:var(--navy);background:linear-gradient(90deg,#fbf3e2,#f3e2bb,#fbf3e2);border:1px solid #e2c98f;border-radius:999px}
 .award-banner b{color:#8a6a2f;font-weight:600}
 .promo-banner{background:linear-gradient(120deg,var(--navy-deep) 0%,var(--navy) 45%,#8a6a2f 100%);border-radius:16px;padding:24px 22px;margin-bottom:20px;text-align:center;box-shadow:0 10px 26px rgba(31,78,121,.24);position:relative;overflow:hidden}
@@ -163,6 +172,47 @@ textarea{resize:vertical;min-height:80px}
     <details class="archived-toggle">
       <summary><span style="font-size:10px">&#9654;</span> Archived coffees (sold out)</summary>
       <div id="archived"></div>
+    </details>
+    <details class="archived-toggle">
+      <summary><span style="font-size:10px">&#9654;</span> Filter brewing guide</summary>
+      <div class="brew-guide-body">
+        <div class="brew-guide-title">Hario V60, 1 cup (ceramic)</div>
+        <div class="brew-grid">
+          <span class="k">Dose</span><span>16g</span>
+          <span class="k">Water</span><span>240g</span>
+          <span class="k">Ratio</span><span>1:15</span>
+          <span class="k">Water temp</span><span>90&ndash;92&deg;C</span>
+          <span class="k">Grind</span><span>Very coarse</span>
+        </div>
+        <div class="brew-label">Method</div>
+        <div class="brew-grid">
+          <span class="t">0:00</span><span>Bloom with 40g</span>
+          <span class="t">0:30</span><span>Pour 80g (total 120g)</span>
+          <span class="t">1:00</span><span>Pour 80g (total 200g)</span>
+          <span class="t">1:30</span><span>Pour 40g (total 240g)</span>
+          <span class="t">1:55&ndash;2:15</span><span>Drawdown complete</span>
+        </div>
+        <div class="brew-note">
+          <p>This is simply a guideline. It&rsquo;s how I do quality control at home and how I enjoy my coffees on my own setup. If a coffee has its own Brew recipe, start with that one.</p>
+          <p>I encourage you to try different recipes and have a play. You&rsquo;ve bought an incredible coffee, so the recipe is your chance to make your mark at the very end of its journey. Better coffee is easier to dial in. Experiment, and share your most interesting results with me.</p>
+        </div>
+      </div>
+    </details>
+    <details class="archived-toggle">
+      <summary><span style="font-size:10px">&#9654;</span> Espresso brewing guide</summary>
+      <div class="brew-guide-body">
+        <div class="brew-guide-title">For my Espresso range</div>
+        <div class="brew-grid">
+          <span class="k">Dose</span><span>20.5g in a 20g basket</span>
+          <span class="k">Yield</span><span>40&ndash;45g out</span>
+          <span class="k">Ratio</span><span>Roughly 1:2 to 1:2.2</span>
+          <span class="k">Time</span><span>25&ndash;30 seconds</span>
+        </div>
+        <div class="brew-note">
+          <p>This is a guideline for my Espresso roasts. They are roasted to indulge in a thick, creamy style of espresso with a lush texture and flavour up front.</p>
+          <p>Prefer a more modern espresso with a longer ratio, around 1:2.5 to 1:3? Take any of my Filter roasts and pull them as juicy shots.</p>
+        </div>
+      </div>
     </details>
   </div>
   <div class="checkout">
