@@ -94,6 +94,12 @@ textarea{resize:vertical;min-height:80px}
 .brew-note p{margin-bottom:7px}.brew-note p:last-child{margin-bottom:0}
 .award-banner{max-width:520px;margin:0 auto 16px;padding:9px 18px;text-align:center;font-size:12px;letter-spacing:.06em;color:var(--navy);background:linear-gradient(90deg,#fbf3e2,#f3e2bb,#fbf3e2);border:1px solid #e2c98f;border-radius:999px}
 .award-banner b{color:#8a6a2f;font-weight:600}
+.event-banner{display:block;max-width:520px;margin:0 auto 16px;padding:13px 18px 14px;text-align:center;text-decoration:none;background:var(--cream);border:1px solid var(--gold);border-radius:14px;box-shadow:0 4px 14px rgba(176,141,79,.15);transition:transform .15s,box-shadow .15s}
+.event-banner:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(176,141,79,.25)}
+.event-kicker{display:block;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#8a6a2f;font-weight:600;margin-bottom:5px}
+.event-text{display:block;font-size:13px;color:var(--ink);line-height:1.5}
+.event-text b{color:var(--navy);font-weight:600}
+.event-cta{display:inline-block;margin-top:9px;padding:7px 16px;border-radius:999px;background:var(--navy);color:#fff;font-size:12px;font-weight:600;letter-spacing:.04em}
 .promo-banner{background:linear-gradient(120deg,var(--navy-deep) 0%,var(--navy) 45%,#8a6a2f 100%);border-radius:16px;padding:24px 22px;margin-bottom:20px;text-align:center;box-shadow:0 10px 26px rgba(31,78,121,.24);position:relative;overflow:hidden}
 .promo-banner::before{content:'';position:absolute;top:-40%;right:-15%;width:200px;height:200px;background:radial-gradient(circle,rgba(255,255,255,.10) 0%,rgba(255,255,255,0) 70%)}
 .promo-kicker{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#f4dfa8;margin-bottom:12px;font-weight:600}
@@ -131,6 +137,9 @@ textarea{resize:vertical;min-height:80px}
   .card{padding:20px 18px}
   .hero-name{font-size:34px}
   .award-banner{font-size:10.5px;letter-spacing:.02em;padding:8px 12px;white-space:nowrap}
+  .event-banner{padding:12px 14px 13px}
+  .event-kicker{font-size:9.5px;letter-spacing:.14em}
+  .event-text{font-size:12.5px}
   #mobile-bar.show{display:flex;position:fixed;left:0;right:0;bottom:0;align-items:center;gap:12px;padding:11px 14px;padding-bottom:calc(11px + env(safe-area-inset-bottom));background:rgba(255,253,248,.97);border-top:1px solid var(--line);box-shadow:0 -6px 22px rgba(31,78,121,.14);z-index:100}
 }
 </style></head><body>
@@ -143,6 +152,12 @@ textarea{resize:vertical;min-height:80px}
     <div class="hero-mark"></div>
   </div>
   <div class="award-banner">&#127942; 2026 ASCA WA Coffee Roasting <b>Champion</b></div>
+  <a class="event-banner" id="event-banner" data-until="2026-11-19T18:30:00+08:00" href="https://andunecoffeestudio.com.au/products/cupping_with_rummy" target="_blank" rel="noopener">
+    <span class="event-kicker">&#9749; Cupping Night &times; Andune Coffee Studio</span>
+    <span class="event-text">Taste my secret beans<br><b>Thursday 19 November</b> &middot; Wembley<br>4pm or 5:30pm &middot; $20 per person</span>
+    <span class="event-cta">Get your tickets &rarr;</span>
+  </a>
+  <script>(function(){var e=document.getElementById('event-banner');if(e&&Date.now()>Date.parse(e.getAttribute('data-until')))e.remove();})();</script>
   <div class="promo-banner">
     <div class="promo-headline">&ldquo;Don&rsquo;t just drink coffee.<br>Discover it.&rdquo;</div>
     <div class="promo-sub">Buy 3 or more bags and get <b>15% off</b>, automatically.</div>
