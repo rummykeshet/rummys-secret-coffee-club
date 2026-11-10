@@ -490,16 +490,17 @@ const DISCOUNTS = {
 const VOLUME_DISCOUNT_MIN_BAGS = 3;
 const VOLUME_DISCOUNT_PERCENT = 15;
 
-// Flash sale: replaces every code and the volume discount until FLASH_END, then switches itself off (mirrored in STRIPE.gs).
+// Flash sale: replaces the volume discount and every non-wholesale code until FLASH_END, then switches itself off (mirrored in STRIPE.gs).
 const FLASH_END = Date.parse('2026-11-11T09:00:00+08:00');
 const FLASH_PERCENT = 20;
 const FLASH_BIG_PERCENT = 25;
 const FLASH_BIG_OVER = 150;
+const FLASH_WHOLESALE_CODES = ['SECRETWHOLESALE30','VERYSECRET40'];   // these still work during the sale and replace it
 function flashOn(){return Date.now()<FLASH_END;}
 if(flashOn()){
   document.getElementById('flash-banner').style.display='block';
   document.getElementById('promo-sub').style.display='none';
-  document.getElementById('discount-hint').textContent='Flash sale is on: your discount is applied automatically. Codes and the 3-bag discount are paused until it ends.';
+  document.getElementById('discount-hint').textContent='Flash sale is on: your discount is applied automatically. Wholesale codes still work. Other codes and the 3-bag discount are paused until it ends.';
 }
 
 // ---------- SHIPPING RATES (identical copy on the website and in STRIPE.gs) ----------
@@ -820,10 +821,10 @@ function applyDiscount(){
   const raw=v('discount-code').trim().toUpperCase();
   const msg=document.getElementById('discount-msg');
   if(!raw){discountPercent=0;discountCodeApplied='';msg.textContent='';msg.style.color='#b5793a';recalc();return;}
-  if(flashOn()){
+  if(flashOn() && !FLASH_WHOLESALE_CODES.includes(raw)){
     discountPercent=0;
     discountCodeApplied='';
-    msg.textContent='The flash sale is on, so codes can\'t be used right now. Your sale discount is applied automatically.';
+    msg.textContent='The flash sale is on, so this code can\'t be used right now. Your sale discount is applied automatically.';
     msg.style.color='#b5793a';
     recalc();
     return;
@@ -843,7 +844,7 @@ function applyDiscount(){
 }
 
 function computeDiscount(coffee){
-  if(flashOn() && coffee>0){
+  if(flashOn() && coffee>0 && !FLASH_WHOLESALE_CODES.includes(discountCodeApplied)){
     const flashPct = coffee>FLASH_BIG_OVER ? FLASH_BIG_PERCENT : FLASH_PERCENT;
     return { pct: flashPct, code: 'FLASHSALE', label: 'Flash sale '+flashPct+'%' };
   }
