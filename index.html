@@ -57,7 +57,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;margin-
 .advent-body p{font-size:12.5px;color:#4a5b6a;line-height:1.75;margin-bottom:8px}
 .advent-dates{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;font-size:12px;line-height:1.5;padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:12px;margin:12px 0}
 .advent-dates .h{grid-column:1/-1;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#8a6a2f;font-weight:600}
-.advent-dates .k{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:2px;white-space:nowrap}
+.advent-dates .k{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:2px;max-width:84px}
 .advent-dates b{color:var(--navy);font-weight:600}
 .advent-dates .sep{grid-column:1/-1;border-top:1px solid var(--line);margin:3px 0}
 .advent-buy{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:12px 14px;background:var(--navy);color:#fff;border-radius:12px}
@@ -414,7 +414,7 @@ textarea{resize:vertical;min-height:80px}
     <div class="total-row grand"><span>Total</span><span id="t-grand">$0</span></div>
     <div style="text-align:right;font-size:10.5px;color:#a39a82;margin-top:4px">All prices in AUD</div>
         <div id="roast-note" style="text-align:center;font-size:11.5px;color:#b08d4f;font-weight:500;margin-top:14px">Roasted fresh for your order. Ready within 3 business days, on its way within 4, often sooner.</div>
-        <div id="advent-checkout-note" style="display:none;text-align:center;font-size:11.5px;color:#8a6a2f;font-weight:500;margin-top:14px;line-height:1.6">Hanukkah Advent Calendar: roasted Monday 23 November, sent (or ready to pick up) Tuesday 24 November. Anything else in this order comes with it.</div>
+        <div id="advent-checkout-note" style="display:none;text-align:center;font-size:11.5px;color:#8a6a2f;font-weight:500;margin-top:14px;line-height:1.6">Hanukkah Advent Calendar: roasted Monday 23 November, sent (or ready to pick up) Tuesday 24 November. <b>Everything else in this order is held and sent (or picked up) together with it on Tuesday 24 November.</b></div>
     <button class="btn" id="paycard" onclick="payByCard()" disabled style="background:linear-gradient(135deg,#5a3fa0,#432f7d);padding:20px;font-size:18px">Pay by card</button>
     <div id="paycard-note" style="text-align:center;font-size:10.5px;color:#a39a82;margin-top:8px;line-height:1.6">Card payments are securely handled by Stripe.</div>
     <button class="btn" id="submit" onclick="placeOrder()" disabled style="margin-top:12px">Place order &amp; pay via bank transfer</button>
@@ -472,7 +472,7 @@ textarea{resize:vertical;min-height:80px}
 const BASE_URL = 'https://script.google.com/macros/s/AKfycbxUrCGIMTUE7oCOYKQGdjeTXAUGdNblNKaPLdASrNsSP5QoDlX7uX4JF_k6HtFfWTguhQ/exec';
 
 const PRODUCTS = [
-  { id:'hanukkah-advent', released:'2026-11-11', featured:true, limited:true, noWholesale:true, closesAt:'2026-11-22T23:59:59+08:00', name:'The Hanukkah Advent Calendar', roast:'Pre-sale', size:'9 x 50g', grams:450, price:150, weight:900 },
+  { id:'hanukkah-advent', released:'2026-11-11', featured:true, limited:true, excludeCodes:true, closesAt:'2026-11-22T23:59:59+08:00', name:'The Hanukkah Advent Calendar', roast:'Pre-sale', size:'9 x 50g', grams:450, price:150, weight:800 },
   { id:'brim-liberica', released:'2026-11-11', name:'Brim - Liberica', roast:'Filter', size:'100g', origin:'Vietnam, Quang Tri', process:'180 Hour Anaerobic Natural', species:'Liberica', notes:'Musk Sticks, Papaya, Oolong, Stevia', releaseAt:'2026-11-11T12:00:00+08:00', why:"On my quest for the rarest and most exciting coffees, I stumbled on this gem. Liberica is a rare species grown mostly in South East Asia, loved for thriving at low altitudes and for its seriously funky flavour. This one breaks the mould, grown up at 600 to 1,000 metres in Vietnam's Quang Tri region.<br><br>Expect a big, stevia-like sweetness, funky tropical fruit and plenty of red fruit to match. Sourced by my friends at Brim Coffee, it's the first Vietnamese Liberica released in Australia. What a time to be alive!", funk:10, price:28, weight:120 },
   { id:'hambela-filter', released:'2026-11-04', name:'Hambela - Anaerobic', roast:'Filter', size:'150g', origin:'Ethiopia', process:'Anaerobic Natural', variety:'JARC Varieties', notes:'Plum Jam, Muscat, Blackberry, Port', releaseAt:'2026-11-04T07:00:00+08:00', why:"From the birthplace of coffee, and one of my favourite regions, comes this excellent Ethiopian. It carries the deep flavours of anaerobic fermentation in a controlled, sweet and refined way, with lots of sweet purple fruit and tropical complexity in the cup.<br><br>It comes from Hambela in Guji, southern Ethiopia, where 650 smallholder farmers grow coffee at 2,100 to 2,300 metres above sea level and deliver their ripest cherries to the Birhanu processing station. The cherries are sealed in barrels to ferment without oxygen for seven days, then dried slowly in the shade on raised African beds for 20 to 25 days, raked constantly and covered from the midday sun and the night-time frost. It was also a Taste of Harvest 2025/26 winner.<br><br>More and more, we are seeing affordable coffees like this that taste like high-end lots, and as soon as I find one I jump at the chance to share it with you. On filter, expect plum jam, muscat, blackberry and a port-like richness.", funk:6, price:24, weight:170 },
   { id:'hambela-espresso', released:'2026-11-04', name:'Hambela - Anaerobic', roast:'Espresso', size:'150g', origin:'Ethiopia', process:'Anaerobic Natural', variety:'JARC Varieties', notes:'Concord Grape, Tropical, Marmalade', releaseAt:'2026-11-04T07:00:00+08:00', why:"From the birthplace of coffee, and one of my favourite regions, comes this excellent Ethiopian. It carries the deep flavours of anaerobic fermentation in a controlled, sweet and refined way, with lots of sweet purple fruit and tropical complexity in the cup.<br><br>It comes from Hambela in Guji, southern Ethiopia, where 650 smallholder farmers grow coffee at 2,100 to 2,300 metres above sea level and deliver their ripest cherries to the Birhanu processing station. The cherries are sealed in barrels to ferment without oxygen for seven days, then dried slowly in the shade on raised African beds for 20 to 25 days, raked constantly and covered from the midday sun and the night-time frost. It was also a Taste of Harvest 2025/26 winner.<br><br>More and more, we are seeing affordable coffees like this that taste like high-end lots, and as soon as I find one I jump at the chance to share it with you. As espresso, it turns into concord grape, tropical fruit and marmalade.", funk:6, price:24, weight:170 },
@@ -529,7 +529,8 @@ const FLASH_END = Date.parse('2026-11-11T09:00:00+08:00');
 const FLASH_PERCENT = 20;
 const FLASH_BIG_PERCENT = 25;
 const FLASH_BIG_OVER = 150;
-const WHOLESALE_CODES = ['SECRETWHOLESALE30','VERYSECRET40'];   // still work during a flash sale; never discount noWholesale products
+const WHOLESALE_CODES = ['SECRETWHOLESALE30','VERYSECRET40'];   // still work during a flash sale
+const EXCLUDED_CODES = ['SECRETWHOLESALE30','VERYSECRET40','LOSTPROPERTY'];   // never discount excludeCodes products (the Hanukkah box)
 function flashOn(){return Date.now()<FLASH_END;}
 if(flashOn()){
   document.getElementById('flash-banner').style.display='block';
@@ -762,6 +763,7 @@ function adventCard(p){
     ['What\'s in it?','9 x 50g rare specialty coffees, each with a brew recipe card.'],
     ['Can I see what the coffees are?','No. That\'s the fun. Each card reveals its coffee on the day.'],
     ['When does it ship?','Tuesday 24 November, express, to everywhere.'],
+    ['Can I add other coffees to the same order?','Yes. Everything in the order is held and sent (or picked up) together with the box on Tuesday 24 November. Want your other coffees sooner? Place them as a separate order.'],
     ['Will it arrive before Hanukkah?','Express is the fastest option, but delivery dates can\'t be guaranteed, especially internationally. Order early.'],
     ['Why is bag 9 on 23 December?','Festivus. Obviously.'],
   ].map(q=>`<details><summary>${q[0]}</summary><p>${q[1]}</p></details>`).join('');
@@ -786,6 +788,7 @@ function adventCard(p){
           <span class="k">Roasted</span><span><b>Monday 23 November</b></span>
           <span class="k">Sent</span><span><b>Tuesday 24 November</b>. Every box upgraded to express automatically, on me. I ship everywhere.</span>
           <span class="k">Pickup</span><span>Mount Lawley, from <b>Tuesday 24 November</b></span>
+          <span class="k">Other coffees</span><span>Anything else in the same order is held and sent (or picked up) together with the box on <b>Tuesday 24 November</b></span>
           <div class="sep"></div>
           <span class="k">Hanukkah</span><span>Sundown <b>Friday 4 December</b> to <b>Saturday 12 December</b></span>
           <span class="k">Bags 1 to 8</span><span>Bag 1 opens <b>Saturday 5 December</b>, bag 8 on <b>Saturday 12 December</b></span>
@@ -942,7 +945,7 @@ function applyDiscount(){
   recalc();
 }
 
-// Returns { pct, code, label, base }: the discount is pct % of base (wholesale codes skip noWholesale products).
+// Returns { pct, code, label, base }: the discount is pct % of base (EXCLUDED_CODES skip excludeCodes products).
 // Mirrored in scComputeDiscount_ (STRIPE.gs).
 function computeDiscount(coffee){
   const wholesale = WHOLESALE_CODES.includes(discountCodeApplied);
@@ -951,7 +954,7 @@ function computeDiscount(coffee){
     return { pct: flashPct, code: 'FLASHSALE', label: 'Flash sale '+flashPct+'%', base: coffee };
   }
   const codePct = discountPercent;
-  const codeBase = wholesale ? PRODUCTS.reduce((s,p)=>s+(p.noWholesale?0:qty[p.id]*p.price),0) : coffee;
+  const codeBase = EXCLUDED_CODES.includes(discountCodeApplied) ? PRODUCTS.reduce((s,p)=>s+(p.excludeCodes?0:qty[p.id]*p.price),0) : coffee;
   const volPct = bagCount() >= VOLUME_DISCOUNT_MIN_BAGS ? VOLUME_DISCOUNT_PERCENT : 0;
   if(codePct > 0 && codeBase > 0 && codeBase*codePct >= coffee*volPct){
     return { pct: codePct, code: discountCodeApplied, label: discountCodeApplied+' '+codePct+'%', base: codeBase };
@@ -982,7 +985,7 @@ function recalc(){
   document.getElementById('advent-checkout-note').style.display=advent?'block':'none';
   document.getElementById('roast-note').style.display=advent?'none':'block';
   if(discountCodeApplied && DISCOUNTS[discountCodeApplied]){
-    const skipped=WHOLESALE_CODES.includes(discountCodeApplied)?PRODUCTS.filter(p=>p.noWholesale&&qty[p.id]>0).map(p=>p.name):[];
+    const skipped=EXCLUDED_CODES.includes(discountCodeApplied)?PRODUCTS.filter(p=>p.excludeCodes&&qty[p.id]>0).map(p=>p.name):[];
     document.getElementById('discount-msg').textContent='Code applied: '+discountPercent+'% off your coffee total.'+(skipped.length?' It doesn\'t apply to '+skipped.join(', ')+'.':'');
   }
   document.getElementById('t-grand').textContent='$'+(coffeeAfterDiscount+(ship||0)).toFixed(2);
@@ -1059,7 +1062,7 @@ function placeOrder(){
   .then(r => r.json())
   .then(() => {
     document.getElementById('ty-amount').textContent='Amount: $'+grand.toFixed(2);
-    if(advent) document.getElementById('ty-timing').textContent='You\'re in. Your Hanukkah Advent Calendar is roasted Monday 23 November and sent express (or ready to pick up) on Tuesday 24 November. Anything else in your order comes with it. Don\'t open bag 1 until Saturday 5 December.';
+    if(advent) document.getElementById('ty-timing').textContent='You\'re in. Your Hanukkah Advent Calendar is roasted Monday 23 November and sent express (or ready to pick up) on Tuesday 24 November. Everything else in your order is sent (or picked up) together with it that day. Don\'t open bag 1 until Saturday 5 December.';
     document.getElementById('order-form').style.display='none';
     document.getElementById('thankyou').style.display='block';
     window.scrollTo(0,0);
