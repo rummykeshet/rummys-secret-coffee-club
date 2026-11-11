@@ -760,11 +760,11 @@ function adventCard(p){
   const closed=isClosed(p), sold=availOf(p)<=0;
   const status=closed?'Pre-sale closed':(sold?'Sold out':'Pre-sale open now. Very limited.');
   const faq=[
-    ['What\'s in it?','9 x 50g rare specialty coffees, each with a brew recipe card.'],
+    ['What\'s in it?','9 x 50g rare specialty coffees, each with a brew recipe card. I promise a tasting box like none other: full of ultra rare, unique and expressive coffees.'],
     ['Can I see what the coffees are?','No. That\'s the fun. Each card reveals its coffee on the day.'],
     ['When does it ship?','Tuesday 24 November, express, to everywhere.'],
     ['Can I add other coffees to the same order?','Yes. Everything in the order is held and sent (or picked up) together with the box on Tuesday 24 November. Want your other coffees sooner? Place them as a separate order.'],
-    ['Will it arrive before Hanukkah?','Express is the fastest option, but delivery dates can\'t be guaranteed, especially internationally. Order early.'],
+    ['Will it arrive before Hanukkah?','Within Australia, it should certainly arrive in time. Internationally it\'s very likely, as express takes up to 6 business days. It does depend on the postal services though, so I can\'t promise it will arrive exactly on time.'],
     ['Why is bag 9 on 23 December?','Festivus. Obviously.'],
   ].map(q=>`<details><summary>${q[0]}</summary><p>${q[1]}</p></details>`).join('');
   return `
