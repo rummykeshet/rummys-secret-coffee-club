@@ -405,7 +405,8 @@ textarea{resize:vertical;min-height:80px}
   <div class="card">
     <div class="section-head"><span class="dot"></span><h2>Your details</h2></div>
     <label>Full name <span class="req">*</span></label>
-    <input type="text" id="name" placeholder="Your name" oninput="recalc()">
+    <input type="text" id="name" placeholder="First and last name" autocomplete="name" oninput="recalc()">
+    <div class="err" id="name-err"></div>
     <label>Email <span class="req">*</span></label>
     <input type="email" id="email" placeholder="you@email.com" oninput="recalc()">
     <label>Phone <span class="req">*</span></label>
@@ -417,7 +418,8 @@ textarea{resize:vertical;min-height:80px}
       <div id="gift-fields" style="display:none">
         <div class="hint" id="gift-hint"></div>
         <label>Recipient's name <span class="req">*</span></label>
-        <input type="text" id="gift-name" placeholder="Who is it for?" oninput="recalc()">
+        <input type="text" id="gift-name" placeholder="Their first and last name" oninput="recalc()">
+        <div class="err" id="gift-name-err"></div>
         <label>Recipient's phone (optional)</label>
         <input type="tel" id="gift-phone" placeholder="In case the courier needs them">
         <label>Personal note for the card (optional)</label>
@@ -1070,7 +1072,14 @@ function recalc(){
   document.getElementById('gift-hint').textContent=fulfil==='pickup'
     ?'You\'ll collect it from Mount Lawley and pass it on. Your own details below are for updates.'
     :'Put the recipient\'s address in the '+(fulfil==='delivery'?'delivery':'shipping')+' details above. Your own details below are for the receipt and updates.';
-  const formOk=(bagCount()>0&&v('name')&&v('email')&&v('phone')&&addrOk&&(!gift||v('gift-name')));
+  // Shipping labels need a full name (first and last), for the buyer and for a gift recipient
+  const fullName=s=>s.split(/\s+/).filter(w=>/\p{L}/u.test(w)).length>=2;
+  const needFull=fulfil==='shipping';
+  const nameOk=!!v('name')&&(!needFull||fullName(v('name')));
+  const giftNameOk=!gift||(!!v('gift-name')&&(!needFull||fullName(v('gift-name'))));
+  document.getElementById('name-err').textContent=(v('name')&&!nameOk)?'Please enter your first and last name. Shipping needs a full name.':'';
+  document.getElementById('gift-name-err').textContent=(gift&&v('gift-name')&&!giftNameOk)?'Please enter their first and last name for the shipping label.':'';
+  const formOk=(bagCount()>0&&nameOk&&v('email')&&v('phone')&&addrOk&&giftNameOk);
   document.getElementById('submit').disabled=!formOk;
   const cardBtn=document.getElementById('paycard');
   if(cardBtn) cardBtn.disabled=!formOk;
