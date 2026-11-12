@@ -49,6 +49,12 @@ h1{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;margin-
 .step-val{min-width:20px;text-align:center;font-size:16px;font-weight:500}
 .advent{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;padding:18px;border:1px solid #d9bf86;border-radius:16px;background:linear-gradient(165deg,#fffdf8 0%,#f6efe0 100%);box-shadow:0 8px 24px rgba(31,78,121,.10)}
 .advent.soldout .advent-buy{opacity:.6}
+#featured{margin-bottom:18px}
+.more-pill{position:fixed;left:50%;bottom:18px;z-index:90;display:flex;align-items:center;gap:8px;padding:11px 20px;border:none;border-radius:999px;background:var(--navy);color:#fff;font-family:inherit;font-size:13px;font-weight:600;letter-spacing:.02em;white-space:nowrap;box-shadow:0 8px 22px rgba(31,78,121,.32);cursor:pointer;opacity:0;pointer-events:none;transform:translate(-50%,24px);transition:opacity .35s,transform .35s}
+.more-pill.show{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
+.more-pill .arr{display:inline-block;font-size:15px;animation:bob 1.4s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(-2px)}50%{transform:translateY(3px)}}
+body.mbar-on .more-pill{bottom:88px}
 .advent-media{align-self:start;position:sticky;top:16px}
 .advent-img{width:100%;height:auto;display:block;border-radius:12px}
 .advent-kicker{display:inline-block;font-size:9.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#fbf3e2;background:#1f2a44;border-radius:999px;padding:4px 11px;margin-bottom:10px}
@@ -192,6 +198,10 @@ textarea{resize:vertical;min-height:80px}
     <div class="hero-name">Rummy's Secret<br>Coffee Club</div>
     <div class="hero-mark"></div>
   </div>
+  </div>
+  <div id="featured"></div>
+  <button type="button" class="more-pill" id="more-pill" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth',block:'start'})"><span class="arr">&#8595;</span> Scroll down for more coffee</button>
+  <div class="intro">
   <div class="flash-banner" id="flash-banner" style="display:none">
     <div class="flash-kicker">&#9889; Flash sale</div>
     <div class="flash-headline">20% off all coffee</div>
@@ -223,7 +233,7 @@ textarea{resize:vertical;min-height:80px}
     </div>
   </div>
   </div>
-  <div class="card">
+  <div class="card" id="shop">
     <div class="section-head"><span class="dot"></span><h2>Choose your coffee</h2></div>
     <details class="funk-explainer">
       <summary>What's the Funk-o-meter? &#127919;</summary>
@@ -755,14 +765,23 @@ function availOf(p){
   return stock[p.id];
 }
 
+// Floating "Scroll down for more coffee" pill: shows while the coffee list is still below the screen.
+let morePillOn=false;
+function initMorePill(){
+  const pill=document.getElementById('more-pill'), shop=document.getElementById('shop');
+  if(morePillOn||!pill||!shop||!document.querySelector('#featured .advent')||!('IntersectionObserver' in window)) return;
+  morePillOn=true;
+  new IntersectionObserver(es=>es.forEach(e=>pill.classList.toggle('show',!e.isIntersecting&&e.boundingClientRect.top>0))).observe(shop);
+}
+
 // Featured pre-sale card (the Hanukkah Advent Calendar). The stock number is never shown.
 function adventCard(p){
   const closed=isClosed(p), sold=availOf(p)<=0;
   const status=closed?'Pre-sale closed':(sold?'Sold out':'Pre-sale open now. Very limited.');
   const faq=[
-    ['What\'s in it?','9 x 50g rare specialty coffees, each with a brew recipe card. I promise a tasting box like none other: full of ultra rare, unique and expressive coffees.'],
-    ['Can I see what the coffees are?','No. That\'s the fun. Each card reveals its coffee on the day.'],
-    ['When does it ship?','Tuesday 24 November, express, to everywhere.'],
+    ['What\'s in it?','9 x 50g rare specialty coffees, each with its own card: a brew recipe on the front, the reveal on the back. I promise a tasting box like none other: full of ultra rare, unique and expressive coffees.'],
+    ['Can I see what the coffees are?','No. That\'s the fun. Brew it with the recipe on the front of the card, take your guess, then flip it over for the reveal.'],
+    ['When does it ship?','Tuesday 24 November, to everywhere. You pay the usual standard postage at checkout, and I upgrade your box to express at no extra cost.'],
     ['Can I add other coffees to the same order?','Yes. Everything in the order is held and sent (or picked up) together with the box on Tuesday 24 November. Want your other coffees sooner? Place them as a separate order.'],
     ['Will it arrive before Hanukkah?','Within Australia, it should certainly arrive in time. Internationally it\'s very likely, as express takes up to 6 business days. It does depend on the postal services though, so I can\'t promise it will arrive exactly on time.'],
     ['Why is bag 9 on 23 December?','Festivus. Obviously.'],
@@ -778,7 +797,7 @@ function adventCard(p){
         <div class="advent-sub">Eight mornings of coffee. Eight nights of light. And one Festivus grievance.</div>
         <div class="advent-body">
           <p>Nine black bags. Nine rare and incredible coffees, 50g each. No names, no tasting notes. Just a number and a date on a card.</p>
-          <p>Open the day's bag. Brew it. Then flip the card for the reveal: the coffee, origin, process, tasting notes, Funk-o-Meter level and a brew recipe made for that coffee.</p>
+          <p>Open the day's bag. The front of its card has a brew recipe made for that coffee, so you can brew it properly first. Taste it, make your guess, then flip the card for the reveal: the coffee, origin, process, tasting notes and Funk-o-Meter level.</p>
           <p>Some are elegant. Some are unhinged. One is a completely different species.</p>
           <p>Bag 9 waits until Wednesday 23 December, because it's a Festivus miracle.</p>
         </div>
@@ -786,7 +805,8 @@ function adventCard(p){
           <div class="h">The rules</div>
           <span class="k">Order by</span><span><b>Sunday 22 November</b></span>
           <span class="k">Roasted</span><span><b>Monday 23 November</b></span>
-          <span class="k">Sent</span><span><b>Tuesday 24 November</b>. Every box upgraded to express automatically, on me. I ship everywhere.</span>
+          <span class="k">Sent</span><span><b>Tuesday 24 November</b></span>
+          <span class="k">Shipping</span><span>I ship everywhere. You just pay the usual standard postage at checkout, and your box is automatically upgraded to <b>express at no extra cost</b> (my orders normally go standard post).</span>
           <span class="k">Pickup</span><span>Mount Lawley, from <b>Tuesday 24 November</b></span>
           <span class="k">Other coffees</span><span>Anything else in the same order is held and sent (or picked up) together with the box on <b>Tuesday 24 November</b></span>
           <div class="sep"></div>
@@ -815,7 +835,8 @@ function renderProducts(){
   const el=document.getElementById('products');
   el.innerHTML='';
   const list=sortedProducts();
-  list.filter(p=>p.featured).forEach(p=>{el.innerHTML+=adventCard(p);});
+  document.getElementById('featured').innerHTML=list.filter(p=>p.featured).map(adventCard).join('');
+  initMorePill();
   list.filter(p=>!p.featured).forEach(p=>{
     const avail=availOf(p);
     const sold=avail<=0;
@@ -1084,6 +1105,7 @@ setFulfil('shipping');
     mt.textContent=g.textContent;
     var n=parseFloat((g.textContent||'').replace(/[^0-9.]/g,''))||0;
     bar.classList.toggle('show',n>0);
+    document.body.classList.toggle('mbar-on',n>0&&getComputedStyle(bar).display!=='none');
     btn.textContent=(pc&&!pc.disabled)?'Pay by card':'Review & complete';
   }
   new MutationObserver(sync).observe(g,{childList:true,characterData:true,subtree:true});
