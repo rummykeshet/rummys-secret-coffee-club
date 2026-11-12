@@ -114,6 +114,16 @@ textarea{resize:vertical;min-height:80px}
 .ty-payid{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;color:var(--navy)}
 .ty-quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;color:var(--navy);line-height:1.55}
 .loading{text-align:center;padding:40px;color:var(--muted);font-size:13px}
+.gift-box{margin-top:16px;padding:14px;background:#fdf6ea;border:1px solid #ecd9b4;border-radius:11px}
+.gift-row{display:flex;align-items:center;gap:10px}
+.gift-row input{width:18px;height:18px;flex-shrink:0;accent-color:#b08d4f}
+.gift-row label{margin:0;text-transform:none;font-size:13px;color:#2a3a4a;letter-spacing:0;cursor:pointer}
+#gift-fields .hint:first-child{margin-top:10px;font-size:11.5px;color:#8a6a2f}
+.advent-count{margin:2px 0 14px;padding:12px 14px;border-radius:12px;background:#1f2a44;color:#fbf3e2;text-align:center}
+.cd-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#ffe6a3;font-weight:600;margin-bottom:8px;line-height:1.5}
+.cd-units{display:flex;justify-content:center;gap:12px}
+.cd-units span{display:flex;flex-direction:column;align-items:center;min-width:50px;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#d9cfbd}
+.cd-units b{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;line-height:1.05;color:#fff;font-variant-numeric:tabular-nums}
 .news-box{display:flex;align-items:flex-start;gap:10px;margin-top:16px;padding:14px;background:#eaf5ef;border:1px solid #b0d8c0;border-radius:11px}
 .news-box input{width:18px;height:18px;flex-shrink:0;margin-top:1px;accent-color:#2d7a4f}
 .news-box label{margin-top:0;text-transform:none;font-size:13px;color:#2a3a4a;letter-spacing:0;cursor:pointer;line-height:1.55}
@@ -402,6 +412,19 @@ textarea{resize:vertical;min-height:80px}
     <input type="tel" id="phone" placeholder="04xx xxx xxx" oninput="recalc()">
     <label>Note (optional)</label>
     <textarea id="note" placeholder="Anything you'd like Rummy to know..."></textarea>
+    <div class="gift-box">
+      <div class="gift-row"><input type="checkbox" id="gift" onchange="toggleGift()"><label for="gift">&#127873; This is a gift</label></div>
+      <div id="gift-fields" style="display:none">
+        <div class="hint" id="gift-hint"></div>
+        <label>Recipient's name <span class="req">*</span></label>
+        <input type="text" id="gift-name" placeholder="Who is it for?" oninput="recalc()">
+        <label>Recipient's phone (optional)</label>
+        <input type="tel" id="gift-phone" placeholder="In case the courier needs them">
+        <label>Personal note for the card (optional)</label>
+        <textarea id="gift-msg" maxlength="300" placeholder="Happy Hanukkah! Eight mornings of great coffee, on me."></textarea>
+        <div class="hint">I'll include your note with the gift.</div>
+      </div>
+    </div>
     <div class="news-box">
       <input type="checkbox" id="newsletter" checked>
       <label for="newsletter">Join Rummy's Secret Newsletter, be the first to know when new coffees drop</label>
@@ -769,10 +792,26 @@ function availOf(p){
 let morePillOn=false;
 function initMorePill(){
   const pill=document.getElementById('more-pill'), shop=document.getElementById('shop');
-  if(morePillOn||!pill||!shop||!document.querySelector('#featured .advent')||!('IntersectionObserver' in window)) return;
+  if(morePillOn||!pill||!shop||!document.querySelector('#featured .advent')) return;
   morePillOn=true;
-  new IntersectionObserver(es=>es.forEach(e=>pill.classList.toggle('show',!e.isIntersecting&&e.boundingClientRect.top>0))).observe(shop);
+  let queued=false;
+  const update=()=>{queued=false; pill.classList.toggle('show',shop.getBoundingClientRect().top>innerHeight*0.75);};
+  addEventListener('scroll',()=>{if(!queued){queued=true;requestAnimationFrame(update);}},{passive:true});
+  addEventListener('resize',update);
+  setTimeout(update,300);
 }
+
+// Last-call countdown on pre-sale cards; when it runs out the card re-renders as closed.
+function tickCountdowns(){
+  document.querySelectorAll('.advent-count').forEach(el=>{
+    const ms=Date.parse(el.dataset.end)-Date.now();
+    if(ms<=0){ renderProducts(); return; }
+    const s=Math.floor(ms/1000), pad=n=>String(n).padStart(2,'0');
+    const set=(u,val)=>{const b=el.querySelector('[data-u="'+u+'"]'); if(b) b.textContent=val;};
+    set('d',Math.floor(s/86400)); set('h',pad(Math.floor(s%86400/3600))); set('m',pad(Math.floor(s%3600/60))); set('s',pad(s%60));
+  });
+}
+setInterval(tickCountdowns,1000);
 
 // Featured pre-sale card (the Hanukkah Advent Calendar). The stock number is never shown.
 function adventCard(p){
@@ -795,6 +834,10 @@ function adventCard(p){
         <div class="advent-kicker">Limited pre-sale</div>
         <div class="advent-title">${p.name}</div>
         <div class="advent-sub">Eight mornings of coffee. Eight nights of light. And one Festivus grievance.</div>
+        ${closed||sold?'':`<div class="advent-count" data-end="${p.closesAt}">
+          <div class="cd-label">Last call to order &middot; pre-sale closes Sunday 22 November, 11:59pm Perth time</div>
+          <div class="cd-units"><span><b data-u="d">0</b>days</span><span><b data-u="h">00</b>hours</span><span><b data-u="m">00</b>mins</span><span><b data-u="s">00</b>secs</span></div>
+        </div>`}
         <div class="advent-body">
           <p>Nine black bags. Nine rare and incredible coffees, 50g each. No names, no tasting notes. Just a number and a date on a card.</p>
           <p>Open the day's bag. The front of its card has a brew recipe made for that coffee, so you can brew it properly first. Taste it, make your guess, then flip the card for the reveal: the coffee, origin, process, tasting notes and Funk-o-Meter level.</p>
@@ -837,6 +880,7 @@ function renderProducts(){
   const list=sortedProducts();
   document.getElementById('featured').innerHTML=list.filter(p=>p.featured).map(adventCard).join('');
   initMorePill();
+  tickCountdowns();
   list.filter(p=>!p.featured).forEach(p=>{
     const avail=availOf(p);
     const sold=avail<=0;
@@ -919,6 +963,15 @@ function buildAddress(){
   return v('i-street')+', '+v('i-suburb')+', '+v('i-state')+' '+v('i-postcode')+', '+v('country');
 }
 function v(id){return(document.getElementById(id)&&document.getElementById(id).value||'').trim()}
+// Gift orders: the recipient and card note travel in the order note (the sheet's Customer Note column).
+// Format read by submitOrder (GIFT flag), the confirmation email and the card receipt.
+function toggleGift(){document.getElementById('gift-fields').style.display=document.getElementById('gift').checked?'block':'none';recalc();}
+function buildNote(){
+  const base=v('note');
+  if(!document.getElementById('gift').checked) return base;
+  const g='GIFT for '+v('gift-name')+(v('gift-phone')?' ('+v('gift-phone')+')':'')+(v('gift-msg')?' | Card note: "'+v('gift-msg').replace(/\s+/g,' ')+'"':'');
+  return base?g+' | Customer note: '+base:g;
+}
 
 function calcShipping(){
   const err=document.getElementById('ship-err'),sp=document.getElementById('ship-price');
@@ -1013,7 +1066,11 @@ function recalc(){
   let addrOk=true;
   if(fulfil==='delivery')addrOk=v('d-suburb')&&v('d-street');
   else if(fulfil==='shipping'){const dest=document.getElementById('ship-dest').value;if(dest==='au')addrOk=v('s-street')&&v('s-suburb')&&v('s-state')&&v('postcode').length===4&&ship!==null;else addrOk=v('country')&&v('i-street')&&v('i-suburb')&&v('i-state')&&v('i-postcode')&&ship!==null;}
-  const formOk=(bagCount()>0&&v('name')&&v('email')&&v('phone')&&addrOk);
+  const gift=document.getElementById('gift').checked;
+  document.getElementById('gift-hint').textContent=fulfil==='pickup'
+    ?'You\'ll collect it from Mount Lawley and pass it on. Your own details below are for updates.'
+    :'Put the recipient\'s address in the '+(fulfil==='delivery'?'delivery':'shipping')+' details above. Your own details below are for the receipt and updates.';
+  const formOk=(bagCount()>0&&v('name')&&v('email')&&v('phone')&&addrOk&&(!gift||v('gift-name')));
   document.getElementById('submit').disabled=!formOk;
   const cardBtn=document.getElementById('paycard');
   if(cardBtn) cardBtn.disabled=!formOk;
@@ -1033,7 +1090,7 @@ function payByCard(){
     postcode:v('postcode'),
     country:v('country'),
     discountCode:discountCodeApplied,
-    note:v('note'),
+    note:buildNote(),
     newsletter:document.getElementById('newsletter').checked?'Yes':'No',
     qtys:buildQtys(),
   };
@@ -1072,7 +1129,7 @@ function placeOrder(){
     discountPercent:disc.pct,
     discountAmount:discountAmt,
     total:grand,
-    note:v('note'),
+    note:buildNote(),
     newsletter:document.getElementById('newsletter').checked?'Yes':'No',
     qtys:buildQtys(),
   };
