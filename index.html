@@ -552,7 +552,7 @@ const DISCOUNTS = {
   'LOSTPROPERTY': 25,
   'SECRETWHOLESALE30': 30,
   'VERYSECRET40': 40,
-  'PCNG40': 40,
+  'PCNGB40': 40,
 };
 
 // Automatic volume discount: buy this many bags or more, get this % off the coffee subtotal.
@@ -566,7 +566,7 @@ const FLASH_PERCENT = 20;
 const FLASH_BIG_PERCENT = 25;
 const FLASH_BIG_OVER = 150;
 const WHOLESALE_CODES = ['SECRETWHOLESALE30','VERYSECRET40'];   // still work during a flash sale
-const EXCLUDED_CODES = ['SECRETWHOLESALE30','VERYSECRET40','LOSTPROPERTY','PCNG40'];   // never discount excludeCodes products (the Hanukkah box)
+const EXCLUDED_CODES = ['SECRETWHOLESALE30','VERYSECRET40','LOSTPROPERTY','PCNGB40'];   // never discount excludeCodes products (the Hanukkah box)
 function flashOn(){return Date.now()<FLASH_END;}
 if(flashOn()){
   document.getElementById('flash-banner').style.display='block';
